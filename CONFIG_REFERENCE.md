@@ -311,15 +311,15 @@ node src/index.js
 
 ### Example 1: Setting up `.env`
 ```env
-TOKEN=NzkyNzU3Njc4OTAxMjM0NTY.X-hvzA.Ovy4MCQyHX2U1WV8B_0Wabcde12345
-MONGO_URI=mongodb+srv://admin:mypassword123@cluster0.abc123.mongodb.net/eco-bot
+TOKEN=your_discord_bot_token_here
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/eco-bot
 CLIENT_ID=1154063522188247121
 GUILD_ID=1154063522188247121
-API_KEY=skip
+API_KEY=your_api_key_here
 DASHBOARD_PORT=3000
 DASHBOARD_URL=http://localhost:3000
-DISCORD_CLIENT_SECRET=kSCaM2_VBZ9X-1a2b3c4d5e6f7g8h9i0j
-SESSION_SECRET=a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z
+DISCORD_CLIENT_SECRET=your_discord_client_secret_here
+SESSION_SECRET=your_random_session_secret_key_here
 OWNER_ID=1364717311386325043
 ```
 

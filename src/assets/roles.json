@@ -1,0 +1,30 @@
+[
+
+  {
+    "id": "574",
+    "name": "High Roller",
+    "description": "Exclusive high roller role.",
+    "type": "role",
+    "price": 1000000,
+    "roleId": "1524156758199632054",
+    "stock": -1
+  },
+  {
+    "id": "575",
+    "name": "Pimp",
+    "description": "Exclusive premium role.",
+    "type": "role",
+    "price": 800000,
+    "roleId": "1524157662852550777",
+    "stock": -1
+  },
+   {
+    "id": "573",
+    "name": "VIP",
+    "description": "VIP role giving you access to a special channel.",
+    "type": "role",
+    "price": 100000,
+    "roleId": "1154063522188247121",
+    "stock": -1
+  }
+]

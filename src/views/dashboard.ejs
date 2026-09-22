@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clover Dashboard</title>
+
+  <style>
+    :root {
+      --bg: #070a0f;
+      --bg2: #0b1018;
+      --panel: rgba(255,255,255,0.045);
+      --panel2: rgba(255,255,255,0.075);
+      --border: rgba(255,255,255,0.09);
+
+      --text: #f4f7fb;
+      --soft: #b6c0ce;
+      --muted: #748093;
+
+      --green: #57f287;
+      --blue: #5865f2;
+      --red: #ed4245;
+      --gold: #ffd166;
+      --purple: #9b5cff;
+      --cyan: #4cc9f0;
+
+      --greenGlow: rgba(87,242,135,.25);
+      --blueGlow: rgba(88,101,242,.25);
+      --goldGlow: rgba(255,209,102,.22);
+      --redGlow: rgba(237,66,69,.22);
+      --purpleGlow: rgba(155,92,255,.22);
+
+      --shadow: 0 24px 70px rgba(0,0,0,.38);
+      --radius: 24px;
+      --radius2: 16px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: Inter, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(87,242,135,.12), transparent 34%),
+        radial-gradient(circle at top right, rgba(88,101,242,.16), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(155,92,255,.12), transparent 36%),
+        var(--bg);
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .app {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      padding: 24px;
+      background: rgba(12,16,24,.9);
+      border-right: 1px solid var(--border);
+      backdrop-filter: blur(18px);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 34px;
+    }
+
+    .brand-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 19px;
+      display: grid;
+      place-items: center;
+      font-size: 30px;
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      box-shadow: 0 0 45px var(--greenGlow);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 23px;
+      letter-spacing: -.04em;
+    }
+
+    .brand p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .nav-label {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      margin: 22px 0 10px 10px;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .nav a {
+      padding: 13px 14px;
+      border-radius: 15px;
+      color: var(--soft);
+      border: 1px solid transparent;
+      transition: .2s ease;
+    }
+
+    .nav a:hover,
+    .nav a.active {
+      background: rgba(255,255,255,.055);
+      border-color: var(--border);
+      color: white;
+      transform: translateX(3px);
+    }
+
+    .nav a.active {
+      background: linear-gradient(135deg, rgba(87,242,135,.18), rgba(88,101,242,.14));
+      border-color: rgba(87,242,135,.24);
+    }
+
+    .side-card {
+      margin-top: 26px;
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.035);
+    }
+
+    .side-card b {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .side-card span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .main {
+      padding: 28px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .headline h2 {
+      margin: 0;
+      font-size: 36px;
+      letter-spacing: -.06em;
+    }
+
+    .headline p {
+      margin: 8px 0 0;
+      color: var(--soft);
+    }
+
+    .owner-pill {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.055);
+      box-shadow: var(--shadow);
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--purple));
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      color: #06110b;
+    }
+
+    .owner-pill b { display: block; font-size: 14px; }
+    .owner-pill span { color: var(--muted); font-size: 12px; }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 28px;
+      border-radius: 28px;
+      border: 1px solid var(--border);
+      background:
+        linear-gradient(135deg, rgba(87,242,135,.16), rgba(88,101,242,.14)),
+        rgba(255,255,255,.04);
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      right: -80px;
+      top: -90px;
+      width: 270px;
+      height: 270px;
+      border-radius: 50%;
+      background: var(--greenGlow);
+      filter: blur(8px);
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1.4fr .6fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .hero h3 {
+      margin: 0;
+      font-size: 29px;
+      letter-spacing: -.04em;
+    }
+
+    .hero p {
+      color: var(--soft);
+      line-height: 1.6;
+      max-width: 760px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 16px;
+      border-radius: 15px;
+      font-weight: 900;
+      border: 1px solid var(--border);
+      transition: .2s ease;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-green {
+      background: linear-gradient(135deg, var(--green), #35c96b);
+      color: #06120b;
+      box-shadow: 0 0 35px var(--greenGlow);
+    }
+
+    .btn-dark {
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+    }
+
+    .hero-badge {
+      justify-self: end;
+      width: 180px;
+      height: 180px;
+      border-radius: 46px;
+      display: grid;
+      place-items: center;
+      font-size: 76px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), transparent 22%),
+        linear-gradient(135deg, rgba(87,242,135,.95), rgba(88,101,242,.95));
+      box-shadow: 0 30px 90px rgba(0,0,0,.35);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .stat {
+      position: relative;
+      overflow: hidden;
+      padding: 20px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .stat::after {
+      content: "";
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      top: -55px;
+      right: -55px;
+      border-radius: 50%;
+      background: var(--blueGlow);
+    }
+
+    .stat.green::after { background: var(--greenGlow); }
+    .stat.gold::after { background: var(--goldGlow); }
+    .stat.red::after { background: var(--redGlow); }
+    .stat.purple::after { background: var(--purpleGlow); }
+
+    .stat small {
+      position: relative;
+      z-index: 2;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-weight: 900;
+      font-size: 11px;
+    }
+
+    .stat b {
+      position: relative;
+      z-index: 2;
+      display: block;
+      margin-top: 8px;
+      font-size: 28px;
+      letter-spacing: -.05em;
+    }
+
+    .stat span {
+      position: relative;
+      z-index: 2;
+      display: block;
+      margin-top: 8px;
+      color: var(--soft);
+      font-size: 12px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .panel {
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      padding: 20px 22px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .panel-head h3 {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: -.03em;
+    }
+
+    .panel-head a {
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .panel-body {
+      padding: 22px;
+    }
+
+    .health-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .health-row {
+      display: grid;
+      grid-template-columns: 140px 1fr 70px;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .health-row span {
+      color: var(--soft);
+      font-size: 13px;
+    }
+
+    .bar {
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .bar > div {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--green), var(--blue));
+    }
+
+    .bar.gold > div { background: linear-gradient(90deg, var(--gold), #ff9f1c); }
+    .bar.red > div { background: linear-gradient(90deg, var(--red), #ff7b7d); }
+    .bar.purple > div { background: linear-gradient(90deg, var(--purple), var(--blue)); }
+
+    .fake-chart {
+      height: 250px;
+      display: flex;
+      align-items: end;
+      gap: 12px;
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(0,0,0,.18);
+      border: 1px solid var(--border);
+    }
+
+    .chart-bar {
+  flex: 1;
+  min-width: 18px;
+  height: calc(var(--h) * 1%);
+  border-radius: 12px 12px 4px 4px;
+  background: linear-gradient(180deg, var(--green), rgba(87,242,135,.24));
+  box-shadow: 0 0 24px rgba(87,242,135,.12);
+}
+
+    .chart-bar:nth-child(2n) {
+      background: linear-gradient(180deg, var(--blue), rgba(88,101,242,.24));
+    }
+
+    .chart-bar:nth-child(3n) {
+      background: linear-gradient(180deg, var(--gold), rgba(255,209,102,.24));
+    }
+
+    .quick-card {
+      padding: 22px;
+      border-radius: 22px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      transition: .2s ease;
+      box-shadow: var(--shadow);
+    }
+
+    .quick-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(87,242,135,.25);
+    }
+
+    .quick-card h4 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .quick-card p {
+      margin: 0;
+      color: var(--soft);
+      line-height: 1.5;
+      font-size: 13px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+    }
+
+    th {
+      padding: 14px 16px;
+      text-align: left;
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      border-bottom: 1px solid var(--border);
+      background: rgba(0,0,0,.12);
+    }
+
+    td {
+      padding: 15px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--soft);
+    }
+
+    tr:hover td {
+      color: white;
+      background: rgba(255,255,255,.025);
+    }
+
+    .rank {
+      display: inline-grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.06);
+      color: var(--gold);
+      font-weight: 900;
+    }
+
+    .money {
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .status {
+      display: inline-flex;
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      border: 1px solid transparent;
+    }
+
+    .status.pending {
+      background: rgba(255,209,102,.12);
+      color: var(--gold);
+      border-color: rgba(255,209,102,.25);
+    }
+
+    .status.completed {
+      background: rgba(87,242,135,.12);
+      color: var(--green);
+      border-color: rgba(87,242,135,.25);
+    }
+
+    .status.cancelled {
+      background: rgba(237,66,69,.12);
+      color: var(--red);
+      border-color: rgba(237,66,69,.25);
+    }
+
+    .activity {
+      display: grid;
+      gap: 12px;
+    }
+
+    .activity-item {
+      display: flex;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.035);
+    }
+
+    .activity-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      background: rgba(87,242,135,.12);
+      color: var(--green);
+      font-size: 19px;
+      flex: 0 0 auto;
+    }
+
+    .activity-item b {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .activity-item span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .footer {
+      color: var(--muted);
+      text-align: center;
+      padding: 20px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 1250px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-badge { justify-self: start; }
+    }
+
+    @media (max-width: 850px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar { height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--border); }
+      .main { padding: 18px; }
+      .topbar { flex-direction: column; align-items: flex-start; }
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <%
+    const jackpot = guildStats?.jackpot || 0;
+    const bets = totalBets || guildStats?.totalGamblingBets || 0;
+    const wins = totalWins || guildStats?.totalGamblingWins || 0;
+    const losses = totalLosses || guildStats?.totalGamblingLosses || 0;
+    const burnedMoney = burned || guildStats?.totalMoneyBurned || 0;
+
+    const userList = users || [];
+    const orderList = orders || [];
+    const totalUserMoneyValue = totalUserMoney || userList.reduce((a,u)=>a+(u.wallet||0)+(u.bank||0),0);
+    const pendingOrdersCount = pendingOrders || orderList.filter(o=>o.status === 'pending').length;
+    const completedOrdersCount = completedOrders || orderList.filter(o=>o.status === 'completed').length;
+    const cancelledOrdersCount = cancelledOrders || orderList.filter(o=>o.status === 'cancelled').length;
+    const winRateValue = wins + losses > 0 ? Math.round((wins / (wins + losses)) * 100) : 0;
+  %>
+
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">🍀</div>
+        <div>
+          <h1>Clover</h1>
+          <p>Owner Dashboard</p>
+        </div>
+      </div>
+
+      <div class="nav-label">Main</div>
+      <nav class="nav">
+        <a class="active" href="/">📊 Dashboard</a>
+        <a href="/users">👥 Users</a>
+        <a href="/orders">📦 Orders</a>
+        <a href="/servers">🧰 Servers</a>
+        <a href="/bulk">🧰 Bulk Tools</a> <!-- ADD THIS -->
+        <a href="/logout">🚪 Logout</a>
+      </nav>
+
+      <div class="nav-label">Status</div>
+      <div class="side-card">
+        <b>System Online</b>
+        <span>Dashboard is connected to MongoDB and managing live bot data.</span>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div class="headline">
+          <h2>Dashboard Overview</h2>
+          <p>Manage economy health, casino performance, users, and Forza orders.</p>
+        </div>
+
+        <div class="owner-pill">
+          <div class="avatar"><%= user.username?.charAt(0)?.toUpperCase() || 'U' %></div>
+          <div>
+            <b><%= user.username %></b>
+            <span>Owner Access</span>
+          </div>
+        </div>
+      </div>
+
+      <section class="hero">
+        <div class="hero-inner">
+          <div>
+            <h3>Clover Control Center</h3>
+            <p>
+              This panel gives you direct control over balances, blacklists, economy stats,
+              gambling performance, jackpot activity, and external Forza orders.
+            </p>
+            <div class="actions">
+              <a class="btn btn-green" href="/users">👥 Manage Users</a>
+              <a class="btn btn-dark" href="/orders">📦 Manage Orders</a>
+              <a class="btn btn-dark" href="/servers">🧰 Manage Servers</a>
+              <a class="btn btn-dark" href="/bulk">🧰 Bulk Tools</a>
+              <a class="btn btn-dark" href="/logout">🚪 Logout</a>
+            </div>
+          </div>
+
+          <div class="hero-badge">🍀</div>
+        </div>
+      </section>
+
+      <section class="stats-grid">
+        <div class="stat gold">
+          <small>Jackpot</small>
+          <b><%= jackpot.toLocaleString() %></b>
+          <span>Current casino jackpot</span>
+        </div>
+
+        <div class="stat">
+          <small>Total Bets</small>
+          <b><%= bets.toLocaleString() %></b>
+          <span>Gambling rounds tracked</span>
+        </div>
+
+        <div class="stat green">
+          <small>Wins</small>
+          <b><%= wins.toLocaleString() %></b>
+          <span>Winning outcomes</span>
+        </div>
+
+        <div class="stat red">
+          <small>Losses</small>
+          <b><%= losses.toLocaleString() %></b>
+          <span>Losing outcomes</span>
+        </div>
+
+        <div class="stat purple">
+          <small>Money Burned</small>
+          <b><%= burnedMoney.toLocaleString() %></b>
+          <span>Removed from economy</span>
+        </div>
+      </section>
+
+      <section class="grid-2">
+        <div class="panel">
+          <div class="panel-head">
+            <h3>📈 Casino Activity</h3>
+            <span>Win rate: <b><%= winRateValue %>%</b></span>
+          </div>
+
+          <div class="panel-body">
+  <div class="fake-chart">
+    <div class="chart-bar" style="--h: <%= Math.max(20, Math.min(100, wins + 20)) %>"></div>
+    <div class="chart-bar" style="--h: <%= Math.max(20, Math.min(100, losses + 20)) %>"></div>
+    <div class="chart-bar" style="--h: <%= Math.max(20, Math.min(100, jackpot / 1000 + 20)) %>"></div>
+    <div class="chart-bar" style="--h: <%= Math.max(20, Math.min(100, burned / 1000 + 20)) %>"></div>
+    <div class="chart-bar" style="--h: <%= Math.max(20, Math.min(100, bets + 20)) %>"></div>
+    <div class="chart-bar" style="--h: 65"></div>
+    <div class="chart-bar" style="--h: 48"></div>
+    <div class="chart-bar" style="--h: 82"></div>
+  </div>
+</div>
+        </div>
+
+        <div class="panel">
+  <div class="panel-head">
+    <h3>🧠 Economy Health</h3>
+  </div>
+
+  <div class="panel-body">
+    <div class="health-list">
+      <div class="health-row">
+        <span>Win Rate</span>
+        <div class="bar">
+          <div class="bar-fill" style="--w: <%= Math.min(100, winRate) %>"></div>
+        </div>
+        <span><%= winRateValue %>%</span>
+      </div>
+
+      <div class="health-row">
+        <span>Order Load</span>
+        <div class="bar gold">
+          <div class="bar-fill" style="--w: <%= Math.min(100, pendingOrdersCount * 10) %>"></div>
+        </div>
+        <span><%= pendingOrdersCount %></span>
+      </div>
+
+      <div class="health-row">
+        <span>Burn Control</span>
+        <div class="bar red">
+          <div class="bar-fill" style="--w: <%= Math.min(100, burnedMoney / 1000) %>"></div>
+        </div>
+        <span><%= burnedMoney.toLocaleString() %></span>
+      </div>
+
+      <div class="health-row">
+        <span>User Wealth</span>
+        <div class="bar purple">
+          <div class="bar-fill" style="--w: <%= Math.min(100, totalUserMoneyValue / 10000) %>"></div>
+        </div>
+        <span><%= totalUserMoneyValue.toLocaleString() %></span>
+      </div>
+    </div>
+  </div>
+</div>
+      </section>
+
+      <section class="grid-3">
+        <a class="quick-card" href="/users">
+          <h4>👥 User Manager</h4>
+          <p>Edit wallet and bank balances, blacklist users, and inspect economy profiles.</p>
+        </a>
+
+        <a class="quick-card" href="/orders">
+          <h4>📦 Order Manager</h4>
+          <p>Review pending Forza credit orders and mark them completed or cancelled.</p>
+        </a>
+
+        <a class="quick-card" href="/logout">
+          <h4>🚪 Secure Logout</h4>
+          <p>End your dashboard session when you’re finished managing the bot.</p>
+        </a>
+      </section>
+
+      <section class="grid-2">
+        <div class="panel">
+          <div class="panel-head">
+            <h3>🏆 Top Users</h3>
+            <a href="/users">View all</a>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>User ID</th>
+                  <th>Wallet</th>
+                  <th>Bank</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% userList.forEach((u, i) => { %>
+                  <tr>
+                    <td><span class="rank">#<%= i + 1 %></span></td>
+                    <td><%= u.username || u.userId %></td>
+                    <td class="money"><%= (u.wallet || 0).toLocaleString() %></td>
+                    <td><%= (u.bank || 0).toLocaleString() %></td>
+                    <td class="money"><%= ((u.wallet || 0) + (u.bank || 0)).toLocaleString() %></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h3>📦 Recent Orders</h3>
+            <a href="/orders">Manage</a>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Order</th>
+                  <th>User</th>
+                  <th>Item</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% orderList.forEach(o => { %>
+                  <tr>
+                    <td><%= o.orderId %></td>
+                    <td><%= o.userId %></td>
+                    <td><%= o.quantity %>x <%= o.itemName %></td>
+                    <td><span class="status <%= o.status %>"><%= o.status %></span></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid-3">
+        <div class="panel">
+          <div class="panel-head"><h3>📦 Order Status</h3></div>
+          <div class="panel-body activity">
+            <div class="activity-item">
+              <div class="activity-icon">🟡</div>
+              <div><b><%= pendingOrdersCount %> Pending</b><span>Orders waiting for staff delivery.</span></div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon">✅</div>
+              <div><b><%= completedOrdersCount %> Completed</b><span>Successfully fulfilled orders.</span></div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon">❌</div>
+              <div><b><%= cancelledOrdersCount %> Cancelled</b><span>Cancelled or refunded orders.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h3>💰 Economy Snapshot</h3></div>
+          <div class="panel-body activity">
+            <div class="activity-item">
+              <div class="activity-icon">👥</div>
+              <div><b><%= users.length %> Profiles</b><span>Loaded economy users.</span></div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon">💵</div>
+              <div><b><%= totalUserMoney.toLocaleString() %> Coins</b><span>Total money shown in top user set.</span></div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon">🔥</div>
+              <div><b><%= burned.toLocaleString() %> Burned</b><span>Money removed from gambling losses/tax.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h3>🛠️ Admin Notes</h3></div>
+          <div class="panel-body activity">
+            <div class="activity-item">
+              <div class="activity-icon">🔒</div>
+              <div><b>Owner Only</b><span>Only your Discord ID can access this dashboard.</span></div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon">⚠️</div>
+              <div><b>Live Database</b><span>Changes apply directly to MongoDB.</span></div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon">🍀</div>
+              <div><b>Clover Control</b><span>Economy, orders, and users in one place.</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer">
+        Clover Dashboard • Economy, Casino, and External Order Control
+      </div>
+    </main>
+  </div>
+</body>
+</html>

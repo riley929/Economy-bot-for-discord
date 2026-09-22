@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Clover • Bulk Tools</title>
+
+  <style>
+    :root {
+      --bg: #070a0f;
+      --panel: rgba(255,255,255,0.045);
+      --panel2: rgba(255,255,255,0.075);
+      --border: rgba(255,255,255,0.09);
+      --text: #f4f7fb;
+      --soft: #b6c0ce;
+      --muted: #748093;
+
+      --green: #57f287;
+      --red: #ed4245;
+      --gold: #ffd166;
+      --blue: #5865f2;
+      --purple: #9b5cff;
+
+      --shadow: 0 24px 70px rgba(0,0,0,.38);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .app {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      padding: 24px;
+      background: rgba(12,16,24,.92);
+      border-right: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .brand-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      font-size: 26px;
+      background: linear-gradient(135deg, var(--red), var(--purple));
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .nav a {
+      padding: 12px 14px;
+      border-radius: 14px;
+      color: var(--soft);
+      border: 1px solid transparent;
+      transition: .2s;
+    }
+
+    .nav a:hover,
+    .nav a.active {
+      background: rgba(255,255,255,.06);
+      border-color: var(--border);
+      color: white;
+    }
+
+    /* MAIN */
+    .main {
+      padding: 28px;
+    }
+
+    .header {
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 34px;
+    }
+
+    .header p {
+      margin-top: 6px;
+      color: var(--soft);
+    }
+
+    /* GRID */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 1100px) {
+      .grid { grid-template-columns: 1fr; }
+      .app { grid-template-columns: 1fr; }
+      .sidebar { position: relative; }
+    }
+
+    /* CARD */
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .card p {
+      margin: 0 0 14px;
+      color: var(--soft);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    /* BUTTONS */
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      font-weight: 900;
+      transition: .2s;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .danger { background: linear-gradient(135deg, var(--red), #b82d32); color: white; }
+    .warning { background: linear-gradient(135deg, var(--gold), #ff9f1c); color: #1a1200; }
+    .blue { background: linear-gradient(135deg, var(--blue), var(--purple)); color: white; }
+    .green { background: linear-gradient(135deg, var(--green), #2fd06b); color: #04140a; }
+
+    /* DANGER ZONE */
+    .danger-zone {
+      margin-top: 26px;
+      padding: 20px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(237,66,69,.3);
+      background: rgba(237,66,69,.06);
+    }
+
+    .danger-zone h2 {
+      margin: 0 0 12px;
+      color: var(--red);
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 900px) {
+      .row { grid-template-columns: 1fr; }
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,.3);
+      color: white;
+      outline: none;
+      margin-bottom: 10px;
+    }
+
+    small {
+      color: var(--muted);
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">🧰</div>
+      <div>
+        <b>Clover Admin</b>
+        <div style="color:var(--muted); font-size:12px;">Bulk Control Panel</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a href="/">📊 Dashboard</a>
+      <a href="/users">👥 Users</a>
+      <a href="/orders">📦 Orders</a>
+      <a href="/servers">🖥️ Servers</a>
+      <a class="active" href="/bulk">🧰 Bulk Tools</a>
+      
+      <a href="/logout">🚪 Logout</a>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <div class="header">
+      <h1>Bulk Tools</h1>
+      <p>Danger zone actions — use carefully. These affect the entire economy.</p>
+    </div>
+
+    <!-- TOOL GRID -->
+   <div class="grid">
+
+  <div class="card">
+    <h3>🚫 Remove All Flags</h3>
+    <p>Resets flags for every user.</p>
+    <form method="POST" action="/bulk/remove-flags">
+      <button class="btn warning">Execute</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>💰 Reset Economy</h3>
+    <p>Sets all wallets + bank balances to 0.</p>
+    <form method="POST" action="/bulk/reset-economy">
+      <button class="btn danger">Wipe Economy</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>👥 Reset All Users</h3>
+    <p>Fully resets all user profiles.</p>
+    <form method="POST" action="/bulk/reset-all">
+      <button class="btn blue">Reset Users</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>📦 Clear Orders</h3>
+    <p>Deletes all order history.</p>
+    <form method="POST" action="/bulk/clear-orders">
+      <button class="btn green">Clear Orders</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>🧠 Panic Lock</h3>
+    <p>Disables economy & gambling instantly.</p>
+</form>
+<form method="POST" action="/bulk/panic-enable">
+  <button class="btn danger">ACTIVATE PANIC</button>
+</form>
+
+<form method="POST" action="/bulk/panic-disable">
+  <button class="btn green">DEACTIVATE PANIC</button>
+</form>
+  </div>
+
+
+  <div class="card">
+    <h3>🔄 Soft Reset</h3>
+    <p>Resets gambling stats only.</p>
+    <form method="POST" action="/bulk/soft-reset">
+      <button class="btn warning">Reset Stats</button>
+    </form>
+  </div>
+
+<div class="danger-zone">
+
+  <h2>⚠️ Danger Zone</h2>
+
+  <div class="row">
+
+    <form method="POST" action="/bulk/nuke-economy">
+      <input name="confirm" placeholder="Type CONFIRM WIPE" />
+      <button class="btn danger">NUKE ECONOMY</button>
+    </form>
+
+    <form method="POST" action="/bulk/nuke-all">
+      <input name="confirm" placeholder="Type CONFIRM ALL WIPE" />
+      <button class="btn danger">NUKE EVERYTHING</button>
+    </form>
+
+  </div>
+
+</div>
+
+
+  </main>
+</div>
+
+</body>
+</html>

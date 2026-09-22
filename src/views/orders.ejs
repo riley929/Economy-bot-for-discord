@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clover Orders</title>
+  <style>
+    :root {
+      --bg: #070a0f;
+      --panel: rgba(255,255,255,0.045);
+      --panel2: rgba(255,255,255,0.075);
+      --border: rgba(255,255,255,0.09);
+      --text: #f4f7fb;
+      --soft: #b6c0ce;
+      --muted: #748093;
+      --green: #57f287;
+      --red: #ed4245;
+      --gold: #ffd166;
+      --blue: #5865f2;
+      --purple: #9b5cff;
+      --cyan: #4cc9f0;
+      --shadow: 0 24px 70px rgba(0,0,0,.38);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin:0; min-height:100vh; color:var(--text); font-family:Inter,Arial,sans-serif; background: radial-gradient(circle at top right, rgba(255,209,102,.13), transparent 35%), radial-gradient(circle at bottom left, rgba(88,101,242,.16), transparent 35%), var(--bg); overflow-x:hidden; }
+    a { color:inherit; text-decoration:none; }
+    button,input,select,textarea { font-family:inherit; }
+    .app { display:grid; grid-template-columns:280px 1fr; min-height:100vh; }
+    .sidebar { position:sticky; top:0; height:100vh; padding:24px; background:rgba(12,16,24,.92); border-right:1px solid var(--border); backdrop-filter:blur(18px); z-index:20; }
+    .brand { display:flex; align-items:center; gap:14px; margin-bottom:34px; }
+    .brand-icon { width:54px; height:54px; border-radius:19px; display:grid; place-items:center; font-size:30px; background:linear-gradient(135deg,var(--gold),var(--purple)); box-shadow:0 0 45px rgba(255,209,102,.25); }
+    .brand h1 { margin:0; font-size:23px; letter-spacing:-.04em; }
+    .brand p { margin:4px 0 0; color:var(--muted); font-size:13px; }
+    .nav-label { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.16em; margin:22px 0 10px 10px; }
+    .nav { display:flex; flex-direction:column; gap:8px; }
+    .nav a { padding:13px 14px; border-radius:15px; color:var(--soft); border:1px solid transparent; transition:.2s ease; }
+    .nav a:hover,.nav a.active { background:rgba(255,255,255,.055); border-color:var(--border); color:white; transform:translateX(3px); }
+    .nav a.active { background:linear-gradient(135deg,rgba(255,209,102,.18),rgba(155,92,255,.14)); border-color:rgba(255,209,102,.24); }
+    .side-card { margin-top:26px; padding:16px; border-radius:18px; border:1px solid var(--border); background:rgba(255,255,255,.035); }
+    .side-card b { display:block; margin-bottom:6px; }
+    .side-card span { color:var(--muted); font-size:13px; line-height:1.45; }
+    .main { padding:28px; }
+    .topbar { display:flex; justify-content:space-between; align-items:center; gap:18px; margin-bottom:24px; }
+    .headline h2 { margin:0; font-size:36px; letter-spacing:-.06em; }
+    .headline p { margin:8px 0 0; color:var(--soft); }
+    .top-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+    .btn { border:1px solid var(--border); border-radius:14px; padding:11px 14px; color:white; font-weight:900; background:rgba(255,255,255,.06); cursor:pointer; transition:.2s ease; display:inline-flex; align-items:center; justify-content:center; gap:8px; }
+    .btn:hover { transform:translateY(-2px); border-color:rgba(255,255,255,.16); }
+    .btn-green { background:linear-gradient(135deg,var(--green),#35c96b); color:#06120b; }
+    .btn-red { background:linear-gradient(135deg,var(--red),#b82d32); color:white; }
+    .btn-blue { background:linear-gradient(135deg,var(--blue),var(--purple)); color:white; }
+    .btn-gold { background:linear-gradient(135deg,var(--gold),#ffb703); color:#171004; }
+    .hero { padding:26px; border-radius:30px; border:1px solid var(--border); background:linear-gradient(135deg,rgba(255,209,102,.16),rgba(155,92,255,.14)),rgba(255,255,255,.04); box-shadow:var(--shadow); margin-bottom:22px; overflow:hidden; position:relative; }
+    .hero::before { content:''; position:absolute; width:260px; height:260px; right:-80px; top:-80px; border-radius:50%; background:rgba(255,209,102,.22); filter:blur(8px); }
+    .hero-grid { position:relative; z-index:1; display:grid; grid-template-columns:1.3fr .7fr; gap:20px; align-items:center; }
+    .hero h3 { margin:0; font-size:28px; letter-spacing:-.04em; }
+    .hero p { color:var(--soft); line-height:1.6; max-width:760px; }
+    .hero-badge { justify-self:end; width:150px; height:150px; border-radius:40px; display:grid; place-items:center; font-size:64px; background:linear-gradient(135deg,var(--gold),var(--purple)); box-shadow:0 30px 80px rgba(0,0,0,.35); }
+    .stats-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:16px; margin-bottom:22px; }
+    .stat { position:relative; overflow:hidden; padding:20px; border-radius:20px; border:1px solid var(--border); background:var(--panel); box-shadow:var(--shadow); }
+    .stat::after { content:''; position:absolute; width:120px; height:120px; top:-55px; right:-55px; border-radius:50%; background:rgba(255,209,102,.22); }
+    .stat.green::after { background:rgba(87,242,135,.22); }
+    .stat.red::after { background:rgba(237,66,69,.18); }
+    .stat.blue::after { background:rgba(88,101,242,.22); }
+    .stat.purple::after { background:rgba(155,92,255,.22); }
+    .stat small { position:relative; z-index:1; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; font-weight:900; font-size:11px; }
+    .stat b { position:relative; z-index:1; display:block; margin-top:8px; font-size:28px; letter-spacing:-.05em; }
+    .stat span { position:relative; z-index:1; display:block; margin-top:8px; color:var(--soft); font-size:12px; }
+    .filters { display:grid; grid-template-columns:1.2fr repeat(4,minmax(140px,.45fr)); gap:12px; margin-bottom:18px; padding:16px; border-radius:22px; border:1px solid var(--border); background:rgba(255,255,255,.035); }
+    .field label { display:block; color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.08em; margin-bottom:7px; font-weight:900; }
+    .field input,.field select { width:100%; padding:12px 14px; border-radius:14px; border:1px solid var(--border); background:rgba(0,0,0,.24); color:white; outline:none; }
+    .field input:focus,.field select:focus { border-color:rgba(255,209,102,.45); box-shadow:0 0 0 3px rgba(255,209,102,.1); }
+    .panel { border-radius:24px; border:1px solid var(--border); background:var(--panel); box-shadow:var(--shadow); overflow:hidden; margin-bottom:22px; }
+    .panel-head { padding:20px 22px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:14px; }
+    .panel-head h3 { margin:0; font-size:20px; letter-spacing:-.03em; }
+    .panel-head span { color:var(--muted); font-size:13px; }
+    .table-wrap { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; min-width:1350px; }
+    th { padding:14px 16px; text-align:left; color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.08em; border-bottom:1px solid var(--border); background:rgba(0,0,0,.12); position:sticky; top:0; z-index:2; }
+    td { padding:15px 16px; border-bottom:1px solid var(--border); color:var(--soft); vertical-align:middle; }
+    tr:hover td { color:white; background:rgba(255,255,255,.025); }
+    .order-id { font-family:Consolas,monospace; color:white; font-weight:900; background:rgba(255,255,255,.06); border:1px solid var(--border); padding:7px 10px; border-radius:10px; display:inline-block; }
+    .user-id { font-family:Consolas,monospace; font-size:13px; color:var(--soft); }
+    .item-name { color:white; font-weight:900; }
+    .sub { display:block; color:var(--muted); font-size:12px; margin-top:4px; }
+    .money { color:var(--green); font-weight:900; }
+    .status { display:inline-flex; padding:7px 11px; border-radius:999px; font-size:12px; font-weight:900; text-transform:uppercase; border:1px solid transparent; }
+    .status.pending { background:rgba(255,209,102,.12); color:var(--gold); border-color:rgba(255,209,102,.25); }
+    .status.completed { background:rgba(87,242,135,.12); color:var(--green); border-color:rgba(87,242,135,.25); }
+    .status.cancelled { background:rgba(237,66,69,.12); color:var(--red); border-color:rgba(237,66,69,.25); }
+    .status.claimed { background:rgba(88,101,242,.12); color:var(--blue); border-color:rgba(88,101,242,.25); }
+    .control-form { display:flex; gap:8px; align-items:center; min-width:270px; }
+    .control-form select { padding:10px 12px; border-radius:12px; background:rgba(0,0,0,.24); border:1px solid var(--border); color:white; outline:none; }
+    .drawer { display:none; background:rgba(255,255,255,.03); border-left:3px solid rgba(255,209,102,.45); }
+    .drawer.open { display:table-row; }
+    .drawer-content { padding:22px; }
+    .detail-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+    .detail-card { padding:15px; border-radius:16px; border:1px solid var(--border); background:rgba(255,255,255,.035); }
+    .detail-card small { color:var(--muted); text-transform:uppercase; letter-spacing:.08em; font-size:10px; font-weight:900; }
+    .detail-card b { display:block; margin-top:7px; font-size:18px; }
+    .timeline { display:grid; gap:12px; margin-top:18px; }
+    .timeline-item { padding:14px; border-radius:16px; border:1px solid var(--border); background:rgba(255,255,255,.035); display:flex; gap:12px; align-items:flex-start; }
+    .timeline-icon { width:38px; height:38px; border-radius:14px; display:grid; place-items:center; background:rgba(255,209,102,.12); color:var(--gold); flex:0 0 auto; }
+    .toast { position:fixed; right:22px; bottom:22px; padding:14px 16px; border-radius:16px; border:1px solid var(--border); background:rgba(12,16,24,.95); color:white; box-shadow:var(--shadow); display:none; z-index:50; }
+    .toast.show { display:block; animation:pop .25s ease; }
+    @keyframes pop { from{transform:translateY(10px);opacity:0;} to{transform:translateY(0);opacity:1;} }
+    .empty { padding:50px; text-align:center; color:var(--muted); }
+    .footer { text-align:center; color:var(--muted); padding:20px; font-size:13px; }
+    @media (max-width:1250px){.app{grid-template-columns:1fr}.sidebar{height:auto;position:relative;border-right:none;border-bottom:1px solid var(--border)}.stats-grid{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:1fr 1fr}.hero-grid{grid-template-columns:1fr}.hero-badge{justify-self:start}.detail-grid{grid-template-columns:1fr 1fr}}
+    @media (max-width:760px){.main{padding:18px}.topbar,.panel-head{flex-direction:column;align-items:flex-start}.stats-grid{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.detail-grid{grid-template-columns:1fr}}
+    .o-gap-1 { gap: 1px; }
+    .o-gap-2 { gap: 2px; }
+    .o-gap-3 { gap: 3px; }
+    .o-gap-4 { gap: 4px; }
+    .o-gap-5 { gap: 5px; }
+    .o-gap-6 { gap: 6px; }
+    .o-gap-7 { gap: 7px; }
+    .o-gap-8 { gap: 8px; }
+    .o-gap-9 { gap: 9px; }
+    .o-gap-10 { gap: 10px; }
+    .o-gap-11 { gap: 11px; }
+    .o-gap-12 { gap: 12px; }
+    .o-gap-13 { gap: 13px; }
+    .o-gap-14 { gap: 14px; }
+    .o-gap-15 { gap: 15px; }
+    .o-gap-16 { gap: 16px; }
+    .o-gap-17 { gap: 17px; }
+    .o-gap-18 { gap: 18px; }
+    .o-gap-19 { gap: 19px; }
+    .o-gap-20 { gap: 20px; }
+    .o-gap-21 { gap: 21px; }
+    .o-gap-22 { gap: 22px; }
+    .o-gap-23 { gap: 23px; }
+    .o-gap-24 { gap: 0px; }
+    .o-gap-25 { gap: 1px; }
+    .o-gap-26 { gap: 2px; }
+    .o-gap-27 { gap: 3px; }
+    .o-gap-28 { gap: 4px; }
+    .o-gap-29 { gap: 5px; }
+    .o-gap-30 { gap: 6px; }
+    .o-gap-31 { gap: 7px; }
+    .o-gap-32 { gap: 8px; }
+    .o-gap-33 { gap: 9px; }
+    .o-gap-34 { gap: 10px; }
+    .o-gap-35 { gap: 11px; }
+    .o-gap-36 { gap: 12px; }
+    .o-gap-37 { gap: 13px; }
+    .o-gap-38 { gap: 14px; }
+    .o-gap-39 { gap: 15px; }
+    .o-gap-40 { gap: 16px; }
+    .o-gap-41 { gap: 17px; }
+    .o-gap-42 { gap: 18px; }
+    .o-gap-43 { gap: 19px; }
+    .o-gap-44 { gap: 20px; }
+    .o-gap-45 { gap: 21px; }
+    .o-gap-46 { gap: 22px; }
+    .o-gap-47 { gap: 23px; }
+    .o-gap-48 { gap: 0px; }
+    .o-gap-49 { gap: 1px; }
+    .o-gap-50 { gap: 2px; }
+    .o-gap-51 { gap: 3px; }
+    .o-gap-52 { gap: 4px; }
+    .o-gap-53 { gap: 5px; }
+    .o-gap-54 { gap: 6px; }
+    .o-gap-55 { gap: 7px; }
+    .o-gap-56 { gap: 8px; }
+    .o-gap-57 { gap: 9px; }
+    .o-gap-58 { gap: 10px; }
+    .o-gap-59 { gap: 11px; }
+    .o-gap-60 { gap: 12px; }
+    .o-gap-61 { gap: 13px; }
+    .o-gap-62 { gap: 14px; }
+    .o-gap-63 { gap: 15px; }
+    .o-gap-64 { gap: 16px; }
+    .o-gap-65 { gap: 17px; }
+    .o-gap-66 { gap: 18px; }
+    .o-gap-67 { gap: 19px; }
+    .o-gap-68 { gap: 20px; }
+    .o-gap-69 { gap: 21px; }
+    .o-gap-70 { gap: 22px; }
+    .o-gap-71 { gap: 23px; }
+    .o-gap-72 { gap: 0px; }
+    .o-gap-73 { gap: 1px; }
+    .o-gap-74 { gap: 2px; }
+    .o-gap-75 { gap: 3px; }
+    .o-gap-76 { gap: 4px; }
+    .o-gap-77 { gap: 5px; }
+    .o-gap-78 { gap: 6px; }
+    .o-gap-79 { gap: 7px; }
+    .o-gap-80 { gap: 8px; }
+    .o-gap-81 { gap: 9px; }
+    .o-gap-82 { gap: 10px; }
+    .o-gap-83 { gap: 11px; }
+    .o-gap-84 { gap: 12px; }
+    .o-gap-85 { gap: 13px; }
+    .o-gap-86 { gap: 14px; }
+    .o-gap-87 { gap: 15px; }
+    .o-gap-88 { gap: 16px; }
+    .o-gap-89 { gap: 17px; }
+    .o-gap-90 { gap: 18px; }
+    .o-gap-91 { gap: 19px; }
+    .o-gap-92 { gap: 20px; }
+    .o-gap-93 { gap: 21px; }
+    .o-gap-94 { gap: 22px; }
+    .o-gap-95 { gap: 23px; }
+    .o-gap-96 { gap: 0px; }
+    .o-gap-97 { gap: 1px; }
+    .o-gap-98 { gap: 2px; }
+    .o-gap-99 { gap: 3px; }
+    .o-gap-100 { gap: 4px; }
+    .o-gap-101 { gap: 5px; }
+    .o-gap-102 { gap: 6px; }
+    .o-gap-103 { gap: 7px; }
+    .o-gap-104 { gap: 8px; }
+    .o-gap-105 { gap: 9px; }
+    .o-gap-106 { gap: 10px; }
+    .o-gap-107 { gap: 11px; }
+    .o-gap-108 { gap: 12px; }
+    .o-gap-109 { gap: 13px; }
+    .o-gap-110 { gap: 14px; }
+    .o-gap-111 { gap: 15px; }
+    .o-gap-112 { gap: 16px; }
+    .o-gap-113 { gap: 17px; }
+    .o-gap-114 { gap: 18px; }
+    .o-gap-115 { gap: 19px; }
+    .o-gap-116 { gap: 20px; }
+    .o-gap-117 { gap: 21px; }
+    .o-gap-118 { gap: 22px; }
+    .o-gap-119 { gap: 23px; }
+    .o-gap-120 { gap: 0px; }
+    .o-gap-121 { gap: 1px; }
+    .o-gap-122 { gap: 2px; }
+    .o-gap-123 { gap: 3px; }
+    .o-gap-124 { gap: 4px; }
+    .o-gap-125 { gap: 5px; }
+    .o-gap-126 { gap: 6px; }
+    .o-gap-127 { gap: 7px; }
+    .o-gap-128 { gap: 8px; }
+    .o-gap-129 { gap: 9px; }
+    .o-gap-130 { gap: 10px; }
+    .o-gap-131 { gap: 11px; }
+    .o-gap-132 { gap: 12px; }
+    .o-gap-133 { gap: 13px; }
+    .o-gap-134 { gap: 14px; }
+    .o-gap-135 { gap: 15px; }
+    .o-gap-136 { gap: 16px; }
+    .o-gap-137 { gap: 17px; }
+    .o-gap-138 { gap: 18px; }
+    .o-gap-139 { gap: 19px; }
+    .o-gap-140 { gap: 20px; }
+    .o-gap-141 { gap: 21px; }
+    .o-gap-142 { gap: 22px; }
+    .o-gap-143 { gap: 23px; }
+    .o-gap-144 { gap: 0px; }
+    .o-gap-145 { gap: 1px; }
+    .o-gap-146 { gap: 2px; }
+    .o-gap-147 { gap: 3px; }
+    .o-gap-148 { gap: 4px; }
+    .o-gap-149 { gap: 5px; }
+    .o-gap-150 { gap: 6px; }
+    .o-gap-151 { gap: 7px; }
+    .o-gap-152 { gap: 8px; }
+    .o-gap-153 { gap: 9px; }
+    .o-gap-154 { gap: 10px; }
+    .o-gap-155 { gap: 11px; }
+    .o-gap-156 { gap: 12px; }
+    .o-gap-157 { gap: 13px; }
+    .o-gap-158 { gap: 14px; }
+    .o-gap-159 { gap: 15px; }
+    .o-gap-160 { gap: 16px; }
+    .o-gap-161 { gap: 17px; }
+    .o-gap-162 { gap: 18px; }
+    .o-gap-163 { gap: 19px; }
+    .o-gap-164 { gap: 20px; }
+    .o-gap-165 { gap: 21px; }
+    .o-gap-166 { gap: 22px; }
+    .o-gap-167 { gap: 23px; }
+    .o-gap-168 { gap: 0px; }
+    .o-gap-169 { gap: 1px; }
+    .o-gap-170 { gap: 2px; }
+    .o-gap-171 { gap: 3px; }
+    .o-gap-172 { gap: 4px; }
+    .o-gap-173 { gap: 5px; }
+    .o-gap-174 { gap: 6px; }
+    .o-gap-175 { gap: 7px; }
+    .o-gap-176 { gap: 8px; }
+    .o-gap-177 { gap: 9px; }
+    .o-gap-178 { gap: 10px; }
+    .o-gap-179 { gap: 11px; }
+    .o-gap-180 { gap: 12px; }
+    .o-gap-181 { gap: 13px; }
+    .o-gap-182 { gap: 14px; }
+    .o-gap-183 { gap: 15px; }
+    .o-gap-184 { gap: 16px; }
+    .o-gap-185 { gap: 17px; }
+    .o-gap-186 { gap: 18px; }
+    .o-gap-187 { gap: 19px; }
+    .o-gap-188 { gap: 20px; }
+    .o-gap-189 { gap: 21px; }
+    .o-gap-190 { gap: 22px; }
+    .o-gap-191 { gap: 23px; }
+    .o-gap-192 { gap: 0px; }
+    .o-gap-193 { gap: 1px; }
+    .o-gap-194 { gap: 2px; }
+    .o-gap-195 { gap: 3px; }
+    .o-gap-196 { gap: 4px; }
+    .o-gap-197 { gap: 5px; }
+    .o-gap-198 { gap: 6px; }
+    .o-gap-199 { gap: 7px; }
+    .o-gap-200 { gap: 8px; }
+    .o-gap-201 { gap: 9px; }
+    .o-gap-202 { gap: 10px; }
+    .o-gap-203 { gap: 11px; }
+    .o-gap-204 { gap: 12px; }
+    .o-gap-205 { gap: 13px; }
+    .o-gap-206 { gap: 14px; }
+    .o-gap-207 { gap: 15px; }
+    .o-gap-208 { gap: 16px; }
+    .o-gap-209 { gap: 17px; }
+    .o-gap-210 { gap: 18px; }
+    .o-gap-211 { gap: 19px; }
+    .o-gap-212 { gap: 20px; }
+    .o-gap-213 { gap: 21px; }
+    .o-gap-214 { gap: 22px; }
+    .o-gap-215 { gap: 23px; }
+    .o-gap-216 { gap: 0px; }
+    .o-gap-217 { gap: 1px; }
+    .o-gap-218 { gap: 2px; }
+    .o-gap-219 { gap: 3px; }
+    .o-gap-220 { gap: 4px; }
+    .o-gap-221 { gap: 5px; }
+    .o-gap-222 { gap: 6px; }
+    .o-gap-223 { gap: 7px; }
+    .o-gap-224 { gap: 8px; }
+    .o-gap-225 { gap: 9px; }
+    .o-gap-226 { gap: 10px; }
+    .o-gap-227 { gap: 11px; }
+    .o-gap-228 { gap: 12px; }
+    .o-gap-229 { gap: 13px; }
+    .o-gap-230 { gap: 14px; }
+    .o-gap-231 { gap: 15px; }
+    .o-gap-232 { gap: 16px; }
+    .o-gap-233 { gap: 17px; }
+    .o-gap-234 { gap: 18px; }
+    .o-gap-235 { gap: 19px; }
+    .o-gap-236 { gap: 20px; }
+    .o-gap-237 { gap: 21px; }
+    .o-gap-238 { gap: 22px; }
+    .o-gap-239 { gap: 23px; }
+    .o-gap-240 { gap: 0px; }
+    .o-gap-241 { gap: 1px; }
+    .o-gap-242 { gap: 2px; }
+    .o-gap-243 { gap: 3px; }
+    .o-gap-244 { gap: 4px; }
+    .o-gap-245 { gap: 5px; }
+    .o-gap-246 { gap: 6px; }
+    .o-gap-247 { gap: 7px; }
+    .o-gap-248 { gap: 8px; }
+    .o-gap-249 { gap: 9px; }
+    .o-gap-250 { gap: 10px; }
+    .o-gap-251 { gap: 11px; }
+    .o-gap-252 { gap: 12px; }
+    .o-gap-253 { gap: 13px; }
+    .o-gap-254 { gap: 14px; }
+    .o-gap-255 { gap: 15px; }
+    .o-gap-256 { gap: 16px; }
+    .o-gap-257 { gap: 17px; }
+    .o-gap-258 { gap: 18px; }
+    .o-gap-259 { gap: 19px; }
+    .o-gap-260 { gap: 20px; }
+    .o-gap-261 { gap: 21px; }
+    .o-gap-262 { gap: 22px; }
+    .o-gap-263 { gap: 23px; }
+    .o-gap-264 { gap: 0px; }
+    .o-gap-265 { gap: 1px; }
+    .o-gap-266 { gap: 2px; }
+    .o-gap-267 { gap: 3px; }
+    .o-gap-268 { gap: 4px; }
+    .o-gap-269 { gap: 5px; }
+    .o-gap-270 { gap: 6px; }
+    .o-gap-271 { gap: 7px; }
+    .o-gap-272 { gap: 8px; }
+    .o-gap-273 { gap: 9px; }
+    .o-gap-274 { gap: 10px; }
+    .o-gap-275 { gap: 11px; }
+    .o-gap-276 { gap: 12px; }
+    .o-gap-277 { gap: 13px; }
+    .o-gap-278 { gap: 14px; }
+    .o-gap-279 { gap: 15px; }
+    .o-gap-280 { gap: 16px; }
+    .o-gap-281 { gap: 17px; }
+    .o-gap-282 { gap: 18px; }
+    .o-gap-283 { gap: 19px; }
+    .o-gap-284 { gap: 20px; }
+    .o-gap-285 { gap: 21px; }
+    .o-gap-286 { gap: 22px; }
+    .o-gap-287 { gap: 23px; }
+    .o-gap-288 { gap: 0px; }
+    .o-gap-289 { gap: 1px; }
+    .o-gap-290 { gap: 2px; }
+    .o-gap-291 { gap: 3px; }
+    .o-gap-292 { gap: 4px; }
+    .o-gap-293 { gap: 5px; }
+    .o-gap-294 { gap: 6px; }
+    .o-gap-295 { gap: 7px; }
+    .o-gap-296 { gap: 8px; }
+    .o-gap-297 { gap: 9px; }
+    .o-gap-298 { gap: 10px; }
+    .o-gap-299 { gap: 11px; }
+    .o-gap-300 { gap: 12px; }
+    .o-pad-1 { padding: 1px; }
+    .o-pad-2 { padding: 2px; }
+    .o-pad-3 { padding: 3px; }
+    .o-pad-4 { padding: 4px; }
+    .o-pad-5 { padding: 5px; }
+    .o-pad-6 { padding: 6px; }
+    .o-pad-7 { padding: 7px; }
+    .o-pad-8 { padding: 8px; }
+    .o-pad-9 { padding: 9px; }
+    .o-pad-10 { padding: 10px; }
+    .o-pad-11 { padding: 11px; }
+    .o-pad-12 { padding: 12px; }
+    .o-pad-13 { padding: 13px; }
+    .o-pad-14 { padding: 14px; }
+    .o-pad-15 { padding: 15px; }
+    .o-pad-16 { padding: 16px; }
+    .o-pad-17 { padding: 17px; }
+    .o-pad-18 { padding: 18px; }
+    .o-pad-19 { padding: 19px; }
+    .o-pad-20 { padding: 20px; }
+    .o-pad-21 { padding: 21px; }
+    .o-pad-22 { padding: 22px; }
+    .o-pad-23 { padding: 23px; }
+    .o-pad-24 { padding: 24px; }
+    .o-pad-25 { padding: 25px; }
+    .o-pad-26 { padding: 26px; }
+    .o-pad-27 { padding: 27px; }
+    .o-pad-28 { padding: 28px; }
+    .o-pad-29 { padding: 29px; }
+    .o-pad-30 { padding: 30px; }
+    .o-pad-31 { padding: 31px; }
+    .o-pad-32 { padding: 0px; }
+    .o-pad-33 { padding: 1px; }
+    .o-pad-34 { padding: 2px; }
+    .o-pad-35 { padding: 3px; }
+    .o-pad-36 { padding: 4px; }
+    .o-pad-37 { padding: 5px; }
+    .o-pad-38 { padding: 6px; }
+    .o-pad-39 { padding: 7px; }
+    .o-pad-40 { padding: 8px; }
+    .o-pad-41 { padding: 9px; }
+    .o-pad-42 { padding: 10px; }
+    .o-pad-43 { padding: 11px; }
+    .o-pad-44 { padding: 12px; }
+    .o-pad-45 { padding: 13px; }
+    .o-pad-46 { padding: 14px; }
+    .o-pad-47 { padding: 15px; }
+    .o-pad-48 { padding: 16px; }
+    .o-pad-49 { padding: 17px; }
+    .o-pad-50 { padding: 18px; }
+    .o-pad-51 { padding: 19px; }
+    .o-pad-52 { padding: 20px; }
+    .o-pad-53 { padding: 21px; }
+    .o-pad-54 { padding: 22px; }
+    .o-pad-55 { padding: 23px; }
+    .o-pad-56 { padding: 24px; }
+    .o-pad-57 { padding: 25px; }
+    .o-pad-58 { padding: 26px; }
+    .o-pad-59 { padding: 27px; }
+    .o-pad-60 { padding: 28px; }
+    .o-pad-61 { padding: 29px; }
+    .o-pad-62 { padding: 30px; }
+    .o-pad-63 { padding: 31px; }
+    .o-pad-64 { padding: 0px; }
+    .o-pad-65 { padding: 1px; }
+    .o-pad-66 { padding: 2px; }
+    .o-pad-67 { padding: 3px; }
+    .o-pad-68 { padding: 4px; }
+    .o-pad-69 { padding: 5px; }
+    .o-pad-70 { padding: 6px; }
+    .o-pad-71 { padding: 7px; }
+    .o-pad-72 { padding: 8px; }
+    .o-pad-73 { padding: 9px; }
+    .o-pad-74 { padding: 10px; }
+    .o-pad-75 { padding: 11px; }
+    .o-pad-76 { padding: 12px; }
+    .o-pad-77 { padding: 13px; }
+    .o-pad-78 { padding: 14px; }
+    .o-pad-79 { padding: 15px; }
+    .o-pad-80 { padding: 16px; }
+    .o-pad-81 { padding: 17px; }
+    .o-pad-82 { padding: 18px; }
+    .o-pad-83 { padding: 19px; }
+    .o-pad-84 { padding: 20px; }
+    .o-pad-85 { padding: 21px; }
+    .o-pad-86 { padding: 22px; }
+    .o-pad-87 { padding: 23px; }
+    .o-pad-88 { padding: 24px; }
+    .o-pad-89 { padding: 25px; }
+    .o-pad-90 { padding: 26px; }
+    .o-pad-91 { padding: 27px; }
+    .o-pad-92 { padding: 28px; }
+    .o-pad-93 { padding: 29px; }
+    .o-pad-94 { padding: 30px; }
+    .o-pad-95 { padding: 31px; }
+    .o-pad-96 { padding: 0px; }
+    .o-pad-97 { padding: 1px; }
+    .o-pad-98 { padding: 2px; }
+    .o-pad-99 { padding: 3px; }
+    .o-pad-100 { padding: 4px; }
+    .o-pad-101 { padding: 5px; }
+    .o-pad-102 { padding: 6px; }
+    .o-pad-103 { padding: 7px; }
+    .o-pad-104 { padding: 8px; }
+    .o-pad-105 { padding: 9px; }
+    .o-pad-106 { padding: 10px; }
+    .o-pad-107 { padding: 11px; }
+    .o-pad-108 { padding: 12px; }
+    .o-pad-109 { padding: 13px; }
+    .o-pad-110 { padding: 14px; }
+    .o-pad-111 { padding: 15px; }
+    .o-pad-112 { padding: 16px; }
+    .o-pad-113 { padding: 17px; }
+    .o-pad-114 { padding: 18px; }
+    .o-pad-115 { padding: 19px; }
+    .o-pad-116 { padding: 20px; }
+    .o-pad-117 { padding: 21px; }
+    .o-pad-118 { padding: 22px; }
+    .o-pad-119 { padding: 23px; }
+    .o-pad-120 { padding: 24px; }
+    .o-pad-121 { padding: 25px; }
+    .o-pad-122 { padding: 26px; }
+    .o-pad-123 { padding: 27px; }
+    .o-pad-124 { padding: 28px; }
+    .o-pad-125 { padding: 29px; }
+    .o-pad-126 { padding: 30px; }
+    .o-pad-127 { padding: 31px; }
+    .o-pad-128 { padding: 0px; }
+    .o-pad-129 { padding: 1px; }
+    .o-pad-130 { padding: 2px; }
+    .o-pad-131 { padding: 3px; }
+    .o-pad-132 { padding: 4px; }
+    .o-pad-133 { padding: 5px; }
+    .o-pad-134 { padding: 6px; }
+    .o-pad-135 { padding: 7px; }
+    .o-pad-136 { padding: 8px; }
+    .o-pad-137 { padding: 9px; }
+    .o-pad-138 { padding: 10px; }
+    .o-pad-139 { padding: 11px; }
+    .o-pad-140 { padding: 12px; }
+    .o-pad-141 { padding: 13px; }
+    .o-pad-142 { padding: 14px; }
+    .o-pad-143 { padding: 15px; }
+    .o-pad-144 { padding: 16px; }
+    .o-pad-145 { padding: 17px; }
+    .o-pad-146 { padding: 18px; }
+    .o-pad-147 { padding: 19px; }
+    .o-pad-148 { padding: 20px; }
+    .o-pad-149 { padding: 21px; }
+    .o-pad-150 { padding: 22px; }
+    .o-radius-1 { border-radius: 1px; }
+    .o-radius-2 { border-radius: 2px; }
+    .o-radius-3 { border-radius: 3px; }
+    .o-radius-4 { border-radius: 4px; }
+    .o-radius-5 { border-radius: 5px; }
+    .o-radius-6 { border-radius: 6px; }
+    .o-radius-7 { border-radius: 7px; }
+    .o-radius-8 { border-radius: 8px; }
+    .o-radius-9 { border-radius: 9px; }
+    .o-radius-10 { border-radius: 10px; }
+    .o-radius-11 { border-radius: 11px; }
+    .o-radius-12 { border-radius: 12px; }
+    .o-radius-13 { border-radius: 13px; }
+    .o-radius-14 { border-radius: 14px; }
+    .o-radius-15 { border-radius: 15px; }
+    .o-radius-16 { border-radius: 16px; }
+    .o-radius-17 { border-radius: 17px; }
+    .o-radius-18 { border-radius: 18px; }
+    .o-radius-19 { border-radius: 19px; }
+    .o-radius-20 { border-radius: 20px; }
+    .o-radius-21 { border-radius: 21px; }
+    .o-radius-22 { border-radius: 22px; }
+    .o-radius-23 { border-radius: 23px; }
+    .o-radius-24 { border-radius: 24px; }
+    .o-radius-25 { border-radius: 25px; }
+    .o-radius-26 { border-radius: 26px; }
+    .o-radius-27 { border-radius: 27px; }
+    .o-radius-28 { border-radius: 28px; }
+    .o-radius-29 { border-radius: 29px; }
+    .o-radius-30 { border-radius: 0px; }
+    .o-radius-31 { border-radius: 1px; }
+    .o-radius-32 { border-radius: 2px; }
+    .o-radius-33 { border-radius: 3px; }
+    .o-radius-34 { border-radius: 4px; }
+    .o-radius-35 { border-radius: 5px; }
+    .o-radius-36 { border-radius: 6px; }
+    .o-radius-37 { border-radius: 7px; }
+    .o-radius-38 { border-radius: 8px; }
+    .o-radius-39 { border-radius: 9px; }
+    .o-radius-40 { border-radius: 10px; }
+    .o-radius-41 { border-radius: 11px; }
+    .o-radius-42 { border-radius: 12px; }
+    .o-radius-43 { border-radius: 13px; }
+    .o-radius-44 { border-radius: 14px; }
+    .o-radius-45 { border-radius: 15px; }
+    .o-radius-46 { border-radius: 16px; }
+    .o-radius-47 { border-radius: 17px; }
+    .o-radius-48 { border-radius: 18px; }
+    .o-radius-49 { border-radius: 19px; }
+    .o-radius-50 { border-radius: 20px; }
+    .o-radius-51 { border-radius: 21px; }
+    .o-radius-52 { border-radius: 22px; }
+    .o-radius-53 { border-radius: 23px; }
+    .o-radius-54 { border-radius: 24px; }
+    .o-radius-55 { border-radius: 25px; }
+    .o-radius-56 { border-radius: 26px; }
+    .o-radius-57 { border-radius: 27px; }
+    .o-radius-58 { border-radius: 28px; }
+    .o-radius-59 { border-radius: 29px; }
+    .o-radius-60 { border-radius: 0px; }
+    .o-radius-61 { border-radius: 1px; }
+    .o-radius-62 { border-radius: 2px; }
+    .o-radius-63 { border-radius: 3px; }
+    .o-radius-64 { border-radius: 4px; }
+    .o-radius-65 { border-radius: 5px; }
+    .o-radius-66 { border-radius: 6px; }
+    .o-radius-67 { border-radius: 7px; }
+    .o-radius-68 { border-radius: 8px; }
+    .o-radius-69 { border-radius: 9px; }
+    .o-radius-70 { border-radius: 10px; }
+    .o-radius-71 { border-radius: 11px; }
+    .o-radius-72 { border-radius: 12px; }
+    .o-radius-73 { border-radius: 13px; }
+    .o-radius-74 { border-radius: 14px; }
+    .o-radius-75 { border-radius: 15px; }
+    .o-radius-76 { border-radius: 16px; }
+    .o-radius-77 { border-radius: 17px; }
+    .o-radius-78 { border-radius: 18px; }
+    .o-radius-79 { border-radius: 19px; }
+    .o-radius-80 { border-radius: 20px; }
+    .o-radius-81 { border-radius: 21px; }
+    .o-radius-82 { border-radius: 22px; }
+    .o-radius-83 { border-radius: 23px; }
+    .o-radius-84 { border-radius: 24px; }
+    .o-radius-85 { border-radius: 25px; }
+    .o-radius-86 { border-radius: 26px; }
+    .o-radius-87 { border-radius: 27px; }
+    .o-radius-88 { border-radius: 28px; }
+    .o-radius-89 { border-radius: 29px; }
+    .o-radius-90 { border-radius: 0px; }
+    .o-radius-91 { border-radius: 1px; }
+    .o-radius-92 { border-radius: 2px; }
+    .o-radius-93 { border-radius: 3px; }
+    .o-radius-94 { border-radius: 4px; }
+    .o-radius-95 { border-radius: 5px; }
+    .o-radius-96 { border-radius: 6px; }
+    .o-radius-97 { border-radius: 7px; }
+    .o-radius-98 { border-radius: 8px; }
+    .o-radius-99 { border-radius: 9px; }
+    .o-radius-100 { border-radius: 10px; }
+    .o-opacity-1 { opacity: 0.10; }
+    .o-opacity-2 { opacity: 0.10; }
+    .o-opacity-3 { opacity: 0.10; }
+    .o-opacity-4 { opacity: 0.10; }
+    .o-opacity-5 { opacity: 0.10; }
+    .o-opacity-6 { opacity: 0.10; }
+    .o-opacity-7 { opacity: 0.10; }
+    .o-opacity-8 { opacity: 0.10; }
+    .o-opacity-9 { opacity: 0.10; }
+    .o-opacity-10 { opacity: 0.10; }
+    .o-opacity-11 { opacity: 0.11; }
+    .o-opacity-12 { opacity: 0.12; }
+    .o-opacity-13 { opacity: 0.13; }
+    .o-opacity-14 { opacity: 0.14; }
+    .o-opacity-15 { opacity: 0.15; }
+    .o-opacity-16 { opacity: 0.16; }
+    .o-opacity-17 { opacity: 0.17; }
+    .o-opacity-18 { opacity: 0.18; }
+    .o-opacity-19 { opacity: 0.19; }
+    .o-opacity-20 { opacity: 0.20; }
+    .o-opacity-21 { opacity: 0.21; }
+    .o-opacity-22 { opacity: 0.22; }
+    .o-opacity-23 { opacity: 0.23; }
+    .o-opacity-24 { opacity: 0.24; }
+    .o-opacity-25 { opacity: 0.25; }
+    .o-opacity-26 { opacity: 0.26; }
+    .o-opacity-27 { opacity: 0.27; }
+    .o-opacity-28 { opacity: 0.28; }
+    .o-opacity-29 { opacity: 0.29; }
+    .o-opacity-30 { opacity: 0.30; }
+    .o-opacity-31 { opacity: 0.31; }
+    .o-opacity-32 { opacity: 0.32; }
+    .o-opacity-33 { opacity: 0.33; }
+    .o-opacity-34 { opacity: 0.34; }
+    .o-opacity-35 { opacity: 0.35; }
+    .o-opacity-36 { opacity: 0.36; }
+    .o-opacity-37 { opacity: 0.37; }
+    .o-opacity-38 { opacity: 0.38; }
+    .o-opacity-39 { opacity: 0.39; }
+    .o-opacity-40 { opacity: 0.40; }
+    .o-opacity-41 { opacity: 0.41; }
+    .o-opacity-42 { opacity: 0.42; }
+    .o-opacity-43 { opacity: 0.43; }
+    .o-opacity-44 { opacity: 0.44; }
+    .o-opacity-45 { opacity: 0.45; }
+    .o-opacity-46 { opacity: 0.46; }
+    .o-opacity-47 { opacity: 0.47; }
+    .o-opacity-48 { opacity: 0.48; }
+    .o-opacity-49 { opacity: 0.49; }
+    .o-opacity-50 { opacity: 0.50; }
+    .o-opacity-51 { opacity: 0.51; }
+    .o-opacity-52 { opacity: 0.52; }
+    .o-opacity-53 { opacity: 0.53; }
+    .o-opacity-54 { opacity: 0.54; }
+    .o-opacity-55 { opacity: 0.55; }
+    .o-opacity-56 { opacity: 0.56; }
+    .o-opacity-57 { opacity: 0.57; }
+    .o-opacity-58 { opacity: 0.58; }
+    .o-opacity-59 { opacity: 0.59; }
+    .o-opacity-60 { opacity: 0.60; }
+    .o-opacity-61 { opacity: 0.61; }
+    .o-opacity-62 { opacity: 0.62; }
+    .o-opacity-63 { opacity: 0.63; }
+    .o-opacity-64 { opacity: 0.64; }
+    .o-opacity-65 { opacity: 0.65; }
+    .o-opacity-66 { opacity: 0.66; }
+    .o-opacity-67 { opacity: 0.67; }
+    .o-opacity-68 { opacity: 0.68; }
+    .o-opacity-69 { opacity: 0.69; }
+    .o-opacity-70 { opacity: 0.70; }
+    .o-opacity-71 { opacity: 0.71; }
+    .o-opacity-72 { opacity: 0.72; }
+    .o-opacity-73 { opacity: 0.73; }
+    .o-opacity-74 { opacity: 0.74; }
+    .o-opacity-75 { opacity: 0.75; }
+    .o-opacity-76 { opacity: 0.76; }
+    .o-opacity-77 { opacity: 0.77; }
+    .o-opacity-78 { opacity: 0.78; }
+    .o-opacity-79 { opacity: 0.79; }
+    .o-opacity-80 { opacity: 0.80; }
+    .o-opacity-81 { opacity: 0.81; }
+    .o-opacity-82 { opacity: 0.82; }
+    .o-opacity-83 { opacity: 0.83; }
+    .o-opacity-84 { opacity: 0.84; }
+    .o-opacity-85 { opacity: 0.85; }
+    .o-opacity-86 { opacity: 0.86; }
+    .o-opacity-87 { opacity: 0.87; }
+    .o-opacity-88 { opacity: 0.88; }
+    .o-opacity-89 { opacity: 0.89; }
+    .o-opacity-90 { opacity: 0.90; }
+    .o-opacity-91 { opacity: 0.91; }
+    .o-opacity-92 { opacity: 0.92; }
+    .o-opacity-93 { opacity: 0.93; }
+    .o-opacity-94 { opacity: 0.94; }
+    .o-opacity-95 { opacity: 0.95; }
+    .o-opacity-96 { opacity: 0.96; }
+    .o-opacity-97 { opacity: 0.97; }
+    .o-opacity-98 { opacity: 0.98; }
+    .o-opacity-99 { opacity: 0.99; }
+    .o-opacity-100 { opacity: 1.00; }
+    .pad-line-0 { --pad-line-0: 0; }
+    .pad-line-1 { --pad-line-1: 1; }
+    .pad-line-2 { --pad-line-2: 2; }
+    .pad-line-3 { --pad-line-3: 3; }
+    .pad-line-4 { --pad-line-4: 4; }
+    .pad-line-5 { --pad-line-5: 5; }
+    .pad-line-6 { --pad-line-6: 6; }
+    .pad-line-7 { --pad-line-7: 7; }
+    .pad-line-8 { --pad-line-8: 8; }
+    .pad-line-9 { --pad-line-9: 9; }
+    .pad-line-10 { --pad-line-10: 10; }
+    .pad-line-11 { --pad-line-11: 11; }
+    .pad-line-12 { --pad-line-12: 12; }
+    .pad-line-13 { --pad-line-13: 13; }
+    .pad-line-14 { --pad-line-14: 14; }
+    .pad-line-15 { --pad-line-15: 15; }
+    .pad-line-16 { --pad-line-16: 16; }
+    .pad-line-17 { --pad-line-17: 17; }
+    .pad-line-18 { --pad-line-18: 18; }
+    .pad-line-19 { --pad-line-19: 19; }
+    .pad-line-20 { --pad-line-20: 20; }
+    .pad-line-21 { --pad-line-21: 21; }
+    .pad-line-22 { --pad-line-22: 22; }
+    .pad-line-23 { --pad-line-23: 23; }
+    .pad-line-24 { --pad-line-24: 24; }
+    .pad-line-25 { --pad-line-25: 25; }
+    .pad-line-26 { --pad-line-26: 26; }
+    .pad-line-27 { --pad-line-27: 27; }
+    .pad-line-28 { --pad-line-28: 28; }
+    .pad-line-29 { --pad-line-29: 29; }
+    .pad-line-30 { --pad-line-30: 30; }
+    .pad-line-31 { --pad-line-31: 31; }
+    .pad-line-32 { --pad-line-32: 32; }
+    .pad-line-33 { --pad-line-33: 33; }
+    .pad-line-34 { --pad-line-34: 34; }
+    .pad-line-35 { --pad-line-35: 35; }
+    .pad-line-36 { --pad-line-36: 36; }
+    .pad-line-37 { --pad-line-37: 37; }
+    .pad-line-38 { --pad-line-38: 38; }
+    .pad-line-39 { --pad-line-39: 39; }
+    .pad-line-40 { --pad-line-40: 40; }
+    .pad-line-41 { --pad-line-41: 41; }
+    .pad-line-42 { --pad-line-42: 42; }
+    .pad-line-43 { --pad-line-43: 43; }
+    .pad-line-44 { --pad-line-44: 44; }
+    .pad-line-45 { --pad-line-45: 45; }
+    .pad-line-46 { --pad-line-46: 46; }
+    .pad-line-47 { --pad-line-47: 47; }
+    .pad-line-48 { --pad-line-48: 48; }
+    .pad-line-49 { --pad-line-49: 49; }
+    .pad-line-50 { --pad-line-50: 50; }
+    .pad-line-51 { --pad-line-51: 51; }
+    .pad-line-52 { --pad-line-52: 52; }
+    .pad-line-53 { --pad-line-53: 53; }
+    .pad-line-54 { --pad-line-54: 54; }
+    .pad-line-55 { --pad-line-55: 55; }
+    .pad-line-56 { --pad-line-56: 56; }
+    .pad-line-57 { --pad-line-57: 57; }
+    .pad-line-58 { --pad-line-58: 58; }
+    .pad-line-59 { --pad-line-59: 59; }
+    .pad-line-60 { --pad-line-60: 60; }
+    .pad-line-61 { --pad-line-61: 61; }
+    .pad-line-62 { --pad-line-62: 62; }
+    .pad-line-63 { --pad-line-63: 63; }
+    .pad-line-64 { --pad-line-64: 64; }
+    .pad-line-65 { --pad-line-65: 65; }
+    .pad-line-66 { --pad-line-66: 66; }
+    .pad-line-67 { --pad-line-67: 67; }
+    .pad-line-68 { --pad-line-68: 68; }
+    .pad-line-69 { --pad-line-69: 69; }
+    .pad-line-70 { --pad-line-70: 70; }
+    .pad-line-71 { --pad-line-71: 71; }
+    .pad-line-72 { --pad-line-72: 72; }
+    .pad-line-73 { --pad-line-73: 73; }
+    .pad-line-74 { --pad-line-74: 74; }
+    .pad-line-75 { --pad-line-75: 75; }
+    .pad-line-76 { --pad-line-76: 76; }
+    .pad-line-77 { --pad-line-77: 77; }
+    .pad-line-78 { --pad-line-78: 78; }
+    .pad-line-79 { --pad-line-79: 79; }
+    .pad-line-80 { --pad-line-80: 80; }
+    .pad-line-81 { --pad-line-81: 81; }
+    .pad-line-82 { --pad-line-82: 82; }
+    .pad-line-83 { --pad-line-83: 83; }
+    .pad-line-84 { --pad-line-84: 84; }
+    .pad-line-85 { --pad-line-85: 85; }
+    .pad-line-86 { --pad-line-86: 86; }
+    .pad-line-87 { --pad-line-87: 87; }
+    .pad-line-88 { --pad-line-88: 88; }
+    .pad-line-89 { --pad-line-89: 89; }
+    .pad-line-90 { --pad-line-90: 90; }
+    .pad-line-91 { --pad-line-91: 91; }
+    .pad-line-92 { --pad-line-92: 92; }
+    .pad-line-93 { --pad-line-93: 93; }
+    .pad-line-94 { --pad-line-94: 94; }
+    .pad-line-95 { --pad-line-95: 95; }
+    .pad-line-96 { --pad-line-96: 96; }
+    .pad-line-97 { --pad-line-97: 97; }
+    .pad-line-98 { --pad-line-98: 98; }
+    .pad-line-99 { --pad-line-99: 99; }
+    .pad-line-100 { --pad-line-100: 100; }
+    .pad-line-101 { --pad-line-101: 101; }
+    .pad-line-102 { --pad-line-102: 102; }
+    .pad-line-103 { --pad-line-103: 103; }
+    .pad-line-104 { --pad-line-104: 104; }
+    .pad-line-105 { --pad-line-105: 105; }
+    .pad-line-106 { --pad-line-106: 106; }
+    .pad-line-107 { --pad-line-107: 107; }
+    .pad-line-108 { --pad-line-108: 108; }
+    .pad-line-109 { --pad-line-109: 109; }
+    .pad-line-110 { --pad-line-110: 110; }
+    .pad-line-111 { --pad-line-111: 111; }
+    .pad-line-112 { --pad-line-112: 112; }
+    .pad-line-113 { --pad-line-113: 113; }
+    .pad-line-114 { --pad-line-114: 114; }
+    .pad-line-115 { --pad-line-115: 115; }
+    .pad-line-116 { --pad-line-116: 116; }
+    .pad-line-117 { --pad-line-117: 117; }
+    .pad-line-118 { --pad-line-118: 118; }
+    .pad-line-119 { --pad-line-119: 119; }
+    .pad-line-120 { --pad-line-120: 120; }
+    .pad-line-121 { --pad-line-121: 121; }
+    .pad-line-122 { --pad-line-122: 122; }
+    .pad-line-123 { --pad-line-123: 123; }
+    .pad-line-124 { --pad-line-124: 124; }
+    .pad-line-125 { --pad-line-125: 125; }
+    .pad-line-126 { --pad-line-126: 126; }
+    .pad-line-127 { --pad-line-127: 127; }
+    .pad-line-128 { --pad-line-128: 128; }
+    .pad-line-129 { --pad-line-129: 129; }
+    .pad-line-130 { --pad-line-130: 130; }
+    .pad-line-131 { --pad-line-131: 131; }
+    .pad-line-132 { --pad-line-132: 132; }
+    .pad-line-133 { --pad-line-133: 133; }
+    .pad-line-134 { --pad-line-134: 134; }
+    .pad-line-135 { --pad-line-135: 135; }
+    .pad-line-136 { --pad-line-136: 136; }
+    .pad-line-137 { --pad-line-137: 137; }
+    .pad-line-138 { --pad-line-138: 138; }
+    .pad-line-139 { --pad-line-139: 139; }
+    .pad-line-140 { --pad-line-140: 140; }
+    .pad-line-141 { --pad-line-141: 141; }
+    .pad-line-142 { --pad-line-142: 142; }
+    .pad-line-143 { --pad-line-143: 143; }
+    .pad-line-144 { --pad-line-144: 144; }
+    .pad-line-145 { --pad-line-145: 145; }
+    .pad-line-146 { --pad-line-146: 146; }
+  </style>
+</head>
+<body>
+  <%
+    const totalOrders = orders.length;
+    const pendingOrders = orders.filter(o=>o.status === 'pending').length;
+    const completedOrders = orders.filter(o=>o.status === 'completed').length;
+    const cancelledOrders = orders.filter(o=>o.status === 'cancelled').length;
+    const totalRevenue = orders.reduce((a,o)=>a+(o.totalPrice||0),0);
+  %>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-icon">📦</div><div><h1>Clover</h1><p>Order Command Center</p></div></div>
+      <div class="nav-label">Main</div>
+      <nav class="nav"><a href="/">📊 Dashboard</a><a href="/users">👥 Users</a><a class="active" href="/orders">📦 Orders</a><a href="/servers">🖥️ Servers</a><a href="/bulk">🧰 Bulk Tools</a><a href="/logout">🚪 Logout</a></nav>
+      <div class="nav-label">Workflow</div>
+      <div class="side-card"><b>Manual Fulfillment</b><span>Use this panel to update Forza credit order statuses after delivery.</span></div>
+      <div class="side-card"><b>Refund Reminder</b><span>Dashboard status changes do not automatically refund. Use Discord cancel flow for refunds.</span></div>
+    </aside>
+    <main class="main">
+      <div class="topbar"><div class="headline"><h2>Order Management</h2><p>Track, search, filter, and update external Forza orders.</p></div><div class="top-actions"><a class="btn" href="/">← Dashboard</a><button class="btn btn-blue" id="exportBtn" type="button">Export Visible</button><button class="btn btn-gold" id="refreshBtn" type="button">Refresh</button></div></div>
+      <section class="hero"><div class="hero-grid"><div><h3>Forza Order Fulfillment Center</h3><p>Review pending orders, filter by customer/item/status, update fulfillment state, and inspect details for each order.</p><div class="top-actions"><button class="btn btn-gold" data-scroll="ordersPanel" type="button">View Orders</button><button class="btn btn-blue" id="pendingOnlyBtn" type="button">Pending Only</button><button class="btn btn-green" id="completedOnlyBtn" type="button">Completed Only</button></div></div><div class="hero-badge">📦</div></div></section>
+      <section class="stats-grid">
+        <div class="stat"><small>Total Orders</small><b><%= totalOrders.toLocaleString() %></b><span>All recorded orders</span></div>
+        <div class="stat blue"><small>Pending</small><b><%= pendingOrders.toLocaleString() %></b><span>Awaiting delivery</span></div>
+        <div class="stat green"><small>Completed</small><b><%= completedOrders.toLocaleString() %></b><span>Delivered orders</span></div>
+        <div class="stat red"><small>Cancelled</small><b><%= cancelledOrders.toLocaleString() %></b><span>Stopped orders</span></div>
+        <div class="stat purple"><small>Total Value</small><b><%= totalRevenue.toLocaleString() %></b><span>Coins spent on orders</span></div>
+      </section>
+      <section class="filters">
+        <div class="field"><label>Search</label><input id="searchInput" placeholder="Search order, user, item..." /></div>
+        <div class="field"><label>Status</label><select id="statusFilter"><option value="all">All</option><option value="pending">Pending</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select></div>
+        <div class="field"><label>Sort</label><select id="sortFilter"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="price-desc">Price high → low</option><option value="price-asc">Price low → high</option></select></div>
+        <div class="field"><label>Minimum Cost</label><input id="minCost" placeholder="0" /></div>
+        <div class="field"><label>Maximum Cost</label><input id="maxCost" placeholder="none" /></div>
+      </section>
+      <section class="panel" id="ordersPanel">
+        <div class="panel-head"><h3>📦 External Orders</h3><span><span id="visibleCount"><%= orders.length %></span> visible orders</span></div>
+        <div class="table-wrap">
+          <table id="ordersTable">
+            <thead><tr><th>Order ID</th><th>User</th><th>Item</th><th>Cost</th><th>Status</th><th>Claimed By</th><th>Created</th><th>Update</th><th>Details</th></tr></thead>
+            <tbody>
+              <% if (!orders.length) { %><tr><td colspan="9" class="empty">No orders found.</td></tr><% } %>
+              <% orders.forEach((o, idx) => { const price = o.totalPrice || 0; const created = o.createdAt ? new Date(o.createdAt).getTime() : 0; %>
+                <tr class="order-row" data-order="<%= o.orderId %>" data-user="<%= o.userId %>" data-item="<%= o.itemName %>" data-status="<%= o.status %>" data-price="<%= price %>" data-created="<%= created %>">
+                  <td><span class="order-id"><%= o.orderId %></span></td>
+                  <td><span class="user-id"><%= o.userId %></span><span class="sub">Customer</span></td>
+                  <td><span class="item-name"><%= o.quantity %>x <%= o.itemName %></span><span class="sub">Item ID: <%= o.itemId || 'unknown' %></span></td>
+                  <td class="money"><%= price.toLocaleString() %> coins</td>
+                  <td><span class="status <%= o.status %>"><%= o.status %></span></td>
+                  <td><% if (o.claimedBy) { %><span class="user-id"><%= o.claimedBy %></span><% } else { %><span class="sub">Not claimed</span><% } %></td>
+                  <td><%= o.createdAt ? new Date(o.createdAt).toLocaleString() : 'Unknown' %></td>
+                  <td><form class="control-form" method="POST" action="/orders/<%= o.orderId %>/status"><select name="status"><option value="pending" <%= o.status === 'pending' ? 'selected' : '' %>>pending</option><option value="completed" <%= o.status === 'completed' ? 'selected' : '' %>>completed</option><option value="cancelled" <%= o.status === 'cancelled' ? 'selected' : '' %>>cancelled</option></select><button class="btn btn-gold" type="submit">Update</button></form></td>
+                  <td><button class="btn" type="button" data-drawer="order-drawer-<%= idx %>">Details</button></td>
+                </tr>
+                <tr class="drawer" id="order-drawer-<%= idx %>"><td colspan="9"><div class="drawer-content"><div class="detail-grid"><div class="detail-card"><small>Order ID</small><b><%= o.orderId %></b></div><div class="detail-card"><small>User</small><b><%= o.userId %></b></div><div class="detail-card"><small>Item</small><b><%= o.itemName %></b></div><div class="detail-card"><small>Quantity</small><b><%= o.quantity %></b></div><div class="detail-card"><small>Cost</small><b><%= price.toLocaleString() %></b></div><div class="detail-card"><small>Status</small><b><%= o.status %></b></div><div class="detail-card"><small>Claimed By</small><b><%= o.claimedBy || 'none' %></b></div><div class="detail-card"><small>Created</small><b><%= o.createdAt ? new Date(o.createdAt).toLocaleString() : 'Unknown' %></b></div></div><div class="timeline"><div class="timeline-item"><div class="timeline-icon">🛒</div><div><b>Order Created</b><span class="sub">Customer purchased an external Forza reward.</span></div></div><div class="timeline-item"><div class="timeline-icon">📦</div><div><b>Status: <%= o.status %></b><span class="sub">Update this order after manual delivery.</span></div></div><div class="timeline-item"><div class="timeline-icon">⚠️</div><div><b>Refund Notice</b><span class="sub">Dashboard cancellation changes status only. Use Discord cancel command for refunds.</span></div></div></div></div></td></tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <div class="footer">Clover Orders Dashboard • Forza external order control</div>
+    </main>
+  </div>
+  <div class="toast" id="toast">Done.</div>
+  <script>
+    const rows = [...document.querySelectorAll('.order-row')];
+    const searchInput = document.getElementById('searchInput');
+    const statusFilter = document.getElementById('statusFilter');
+    const sortFilter = document.getElementById('sortFilter');
+    const minCost = document.getElementById('minCost');
+    const maxCost = document.getElementById('maxCost');
+    const visibleCount = document.getElementById('visibleCount');
+    const toast = document.getElementById('toast');
+    function moneyNumber(value){ const n=Number(String(value||'').replace(/,/g,'').trim()); return Number.isFinite(n)?n:0; }
+    function drawerFor(row){ const d=row.nextElementSibling?.classList?.contains('drawer')?row.nextElementSibling:null; return d; }
+    function setVisible(row, visible){ row.style.display=visible?'':'none'; const d=drawerFor(row); if(d&&!visible)d.classList.remove('open'); if(d)d.style.display=visible&&d.classList.contains('open')?'table-row':'none'; }
+    function applyFilters(){ const q=searchInput.value.toLowerCase().trim(); const st=statusFilter.value; const min=moneyNumber(minCost.value); const maxRaw=maxCost.value.trim(); const max=maxRaw?moneyNumber(maxRaw):Infinity; let count=0; rows.forEach(row=>{ const text=row.innerText.toLowerCase(); const status=row.dataset.status; const price=Number(row.dataset.price||0); const visible=text.includes(q)&&(st==='all'||status===st)&&price>=min&&price<=max; setVisible(row,visible); if(visible)count++; }); visibleCount.textContent=count; }
+    function applySort(){ const type=sortFilter.value; const tbody=document.querySelector('#ordersTable tbody'); const pairs=rows.map(row=>({row,drawer:drawerFor(row)})); pairs.sort((a,b)=>{ if(type==='newest')return Number(b.row.dataset.created)-Number(a.row.dataset.created); if(type==='oldest')return Number(a.row.dataset.created)-Number(b.row.dataset.created); if(type==='price-desc')return Number(b.row.dataset.price)-Number(a.row.dataset.price); if(type==='price-asc')return Number(a.row.dataset.price)-Number(b.row.dataset.price); return 0; }); pairs.forEach(p=>{tbody.appendChild(p.row); if(p.drawer)tbody.appendChild(p.drawer);}); }
+    searchInput.addEventListener('input', applyFilters); statusFilter.addEventListener('change', applyFilters); minCost.addEventListener('input', applyFilters); maxCost.addEventListener('input', applyFilters); sortFilter.addEventListener('change',()=>{applySort();applyFilters();});
+    document.querySelectorAll('[data-drawer]').forEach(btn=>{btn.addEventListener('click',()=>{const d=document.getElementById(btn.dataset.drawer); d.classList.toggle('open'); d.style.display=d.classList.contains('open')?'table-row':'none';});});
+    document.getElementById('pendingOnlyBtn').addEventListener('click',()=>{statusFilter.value='pending';applyFilters();});
+    document.getElementById('completedOnlyBtn').addEventListener('click',()=>{statusFilter.value='completed';applyFilters();});
+    document.getElementById('refreshBtn').addEventListener('click',()=>window.location.reload());
+    document.querySelectorAll('[data-scroll]').forEach(btn=>btn.addEventListener('click',()=>document.getElementById(btn.dataset.scroll)?.scrollIntoView({behavior:'smooth'})));
+    function visibleExport(){ const lines=['orderId,userId,item,status,totalPrice,createdAt']; rows.forEach(row=>{if(row.style.display==='none')return; lines.push([row.dataset.order,row.dataset.user,row.dataset.item,row.dataset.status,row.dataset.price,row.dataset.created].join(','));}); return lines.join('\n'); }
+    function showToast(text){ toast.textContent=text; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),1800); }
+    document.getElementById('exportBtn').addEventListener('click',()=>{const blob=new Blob([visibleExport()],{type:'text/csv'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='clover-orders.csv'; a.click(); URL.revokeObjectURL(url); showToast('Export downloaded.');});
+    applySort(); applyFilters();
+  </script>
+</body>
+</html>

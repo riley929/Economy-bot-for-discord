@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Clover • Servers</title>
+
+  <style>
+    :root {
+      --bg: #070a0f;
+      --panel: rgba(255,255,255,0.045);
+      --border: rgba(255,255,255,0.09);
+      --text: #f4f7fb;
+      --soft: #b6c0ce;
+      --muted: #748093;
+
+      --green: #57f287;
+      --red: #ed4245;
+      --blue: #5865f2;
+      --purple: #9b5cff;
+      --gold: #ffd166;
+
+      --shadow: 0 24px 70px rgba(0,0,0,.38);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      padding: 24px;
+      background: rgba(12,16,24,.92);
+      border-right: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .brand-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      font-size: 26px;
+      background: linear-gradient(135deg, var(--green), var(--blue));
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .nav a {
+      padding: 12px 14px;
+      border-radius: 14px;
+      color: var(--soft);
+      text-decoration: none;
+      border: 1px solid transparent;
+    }
+
+    .nav a:hover,
+    .nav a.active {
+      background: rgba(255,255,255,.06);
+      border-color: var(--border);
+      color: white;
+    }
+
+    /* MAIN */
+    .main {
+      padding: 28px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 38px;
+    }
+
+    .header p {
+      margin-top: 6px;
+      color: var(--soft);
+    }
+
+    /* SEARCH */
+    .search {
+      margin: 18px 0;
+    }
+
+    .search input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,.25);
+      color: white;
+      outline: none;
+    }
+
+    /* GRID */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 16px;
+    }
+
+    /* CARD */
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      transition: .2s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(87,242,135,.25);
+    }
+
+    .top {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      overflow: hidden;
+      background: rgba(255,255,255,.06);
+      display: grid;
+      place-items: center;
+    }
+
+    .icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* STATUS BADGES */
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 10px 0;
+    }
+
+    .badge {
+      font-size: 11px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+    }
+
+    .online { color: var(--green); }
+    .eco { color: var(--gold); }
+    .orders { color: var(--blue); }
+
+    /* INFO GRID */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .box {
+      padding: 10px;
+      border-radius: 14px;
+      background: rgba(0,0,0,.25);
+      border: 1px solid var(--border);
+    }
+
+    .box b {
+      display: block;
+      font-size: 14px;
+    }
+
+    .box span {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* ACTIONS */
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 12px;
+      border: none;
+      font-weight: 900;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      transition: .2s;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .blue { background: linear-gradient(135deg, var(--blue), var(--purple)); color: white; }
+    .danger { background: linear-gradient(135deg, var(--red), #b82d32); color: white; }
+    .dark { background: rgba(255,255,255,.06); color: white; }
+
+    .empty {
+      text-align: center;
+      padding: 40px;
+      color: var(--muted);
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">🍀</div>
+      <div>
+        <b>Clover</b>
+        <div style="color:var(--muted); font-size:12px;">Servers Panel</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a href="/">📊 Dashboard</a>
+      <a href="/users">👥 Users</a>
+      <a href="/orders">📦 Orders</a>
+      <a class="active" href="/servers">🖥️ Servers</a>
+      <a href="/bulk">🧰 Bulk Tools</a>
+      <a href="/logout">🚪 Logout</a>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <div class="header">
+      <h1>Servers Control Center</h1>
+      <p>Manage bot presence, economy, and server systems.</p>
+    </div>
+
+    <div class="search">
+      <input type="text" placeholder="Search servers..." onkeyup="filterServers(this.value)">
+    </div>
+
+    <div class="grid">
+
+      <% const list = typeof botGuilds !== "undefined" ? botGuilds : []; %>
+
+      <% if (list.length === 0) { %>
+        <div class="empty">No servers found.</div>
+      <% } %>
+
+      <% list.forEach(guild => { %>
+
+        <div class="card server-card">
+
+          <div class="top">
+            <div class="icon">
+              <% if (guild.icon) { %>
+                <img src="<%= guild.icon %>" />
+              <% } else { %>
+                🖥️
+              <% } %>
+            </div>
+
+            <div>
+              <b class="server-name"><%= guild.name %></b>
+              <div class="muted"><%= guild.memberCount %> members</div>
+            </div>
+          </div>
+
+          <!-- STATUS -->
+          <div class="badges">
+            <div class="badge online">🟢 Bot Online</div>
+            <div class="badge eco">💰 Economy Active</div>
+            <div class="badge orders">📦 Orders Live</div>
+          </div>
+
+          <!-- INFO -->
+          <div class="info-grid">
+            <div class="box">
+              <b>System</b>
+              <span>Stable</span>
+            </div>
+
+            <div class="box">
+              <b>Health</b>
+              <span>Good</span>
+            </div>
+
+            <div class="box">
+              <b>Uptime</b>
+              <span>99.9%</span>
+            </div>
+
+            <div class="box">
+              <b>Latency</b>
+              <span>~50ms</span>
+            </div>
+          </div>
+
+          <!-- ACTIONS -->
+          <div class="actions">
+
+            <a class="btn blue" href="/servers/<%= guild.id %>">
+              Manage
+            </a>
+
+            <form method="POST" action="/servers/<%= guild.id %>/leave" style="flex:1;">
+              <button class="btn danger">Leave</button>
+            </form>
+
+          </div>
+
+        </div>
+
+      <% }) %>
+
+    </div>
+
+  </main>
+
+</div>
+
+<script>
+function filterServers(value) {
+  const cards = document.querySelectorAll('.server-card');
+  value = value.toLowerCase();
+
+  cards.forEach(c => {
+    const name = c.querySelector('.server-name').innerText.toLowerCase();
+    c.style.display = name.includes(value) ? 'block' : 'none';
+  });
+}
+</script>
+
+</body>
+</html>

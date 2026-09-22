@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clover Users</title>
+  <style>
+    :root {
+      --bg: #070a0f;
+      --bg-soft: #0b1018;
+      --panel: rgba(255,255,255,0.045);
+      --panel-2: rgba(255,255,255,0.075);
+      --panel-3: rgba(255,255,255,0.105);
+      --border: rgba(255,255,255,0.09);
+      --border-strong: rgba(255,255,255,0.16);
+      --text: #f4f7fb;
+      --soft: #b6c0ce;
+      --muted: #748093;
+      --green: #57f287;
+      --red: #ed4245;
+      --gold: #ffd166;
+      --blue: #5865f2;
+      --purple: #9b5cff;
+      --cyan: #4cc9f0;
+      --shadow: 0 24px 70px rgba(0,0,0,.38);
+      --radius-xl: 30px;
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: Inter, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(87,242,135,.12), transparent 34%),
+        radial-gradient(circle at top right, rgba(88,101,242,.15), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(155,92,255,.12), transparent 36%),
+        var(--bg);
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input, select { font-family: inherit; }
+    .app { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 24px;
+      background: rgba(12,16,24,.92);
+      border-right: 1px solid var(--border);
+      backdrop-filter: blur(18px);
+      z-index: 20;
+    }
+    .brand { display: flex; align-items: center; gap: 14px; margin-bottom: 34px; }
+    .brand-icon {
+      width: 54px; height: 54px; border-radius: 19px;
+      display: grid; place-items: center; font-size: 30px;
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      box-shadow: 0 0 45px rgba(87,242,135,.25);
+    }
+    .brand h1 { margin: 0; font-size: 23px; letter-spacing: -.04em; }
+    .brand p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+    .nav-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .16em; margin: 22px 0 10px 10px; }
+    .nav { display: flex; flex-direction: column; gap: 8px; }
+    .nav a { padding: 13px 14px; border-radius: 15px; color: var(--soft); border: 1px solid transparent; transition: .2s ease; }
+    .nav a:hover, .nav a.active { background: rgba(255,255,255,.055); border-color: var(--border); color: white; transform: translateX(3px); }
+    .nav a.active { background: linear-gradient(135deg, rgba(87,242,135,.18), rgba(88,101,242,.14)); border-color: rgba(87,242,135,.24); }
+    .side-card { margin-top: 26px; padding: 16px; border-radius: 18px; border: 1px solid var(--border); background: rgba(255,255,255,.035); }
+    .side-card b { display: block; margin-bottom: 6px; }
+    .side-card span { color: var(--muted); font-size: 13px; line-height: 1.45; }
+    .main { padding: 28px; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; gap: 18px; margin-bottom: 24px; }
+    .headline h2 { margin: 0; font-size: 36px; letter-spacing: -.06em; }
+    .headline p { margin: 8px 0 0; color: var(--soft); }
+    .top-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .btn {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 11px 14px;
+      color: white;
+      font-weight: 900;
+      background: rgba(255,255,255,.06);
+      cursor: pointer;
+      transition: .2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn:hover { transform: translateY(-2px); border-color: var(--border-strong); }
+    .btn-green { background: linear-gradient(135deg, var(--green), #35c96b); color: #06120b; box-shadow: 0 0 28px rgba(87,242,135,.2); }
+    .btn-red { background: linear-gradient(135deg, var(--red), #b82d32); color: white; }
+    .btn-blue { background: linear-gradient(135deg, var(--blue), var(--purple)); color: white; }
+    .btn-gold { background: linear-gradient(135deg, var(--gold), #ffb703); color: #171004; }
+    .hero {
+      padding: 26px;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border);
+      background: linear-gradient(135deg, rgba(87,242,135,.16), rgba(88,101,242,.14)), rgba(255,255,255,.04);
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
+      overflow: hidden;
+      position: relative;
+    }
+    .hero::before { content:''; position:absolute; width:260px; height:260px; right:-80px; top:-80px; border-radius:50%; background: rgba(87,242,135,.22); filter: blur(8px); }
+    .hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.3fr .7fr; gap: 20px; align-items: center; }
+    .hero h3 { margin: 0; font-size: 28px; letter-spacing: -.04em; }
+    .hero p { color: var(--soft); line-height: 1.6; max-width: 760px; }
+    .hero-badge { justify-self: end; width: 150px; height: 150px; border-radius: 40px; display:grid; place-items:center; font-size:64px; background:linear-gradient(135deg, var(--green), var(--purple)); box-shadow: 0 30px 80px rgba(0,0,0,.35); }
+    .stats-grid { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 16px; margin-bottom: 22px; }
+    .stat { position: relative; overflow: hidden; padding: 20px; border-radius: 20px; border:1px solid var(--border); background: var(--panel); box-shadow: var(--shadow); }
+    .stat::after { content:''; position:absolute; width:120px; height:120px; top:-55px; right:-55px; border-radius:50%; background: rgba(88,101,242,.22); }
+    .stat.green::after { background: rgba(87,242,135,.22); }
+    .stat.red::after { background: rgba(237,66,69,.18); }
+    .stat.gold::after { background: rgba(255,209,102,.2); }
+    .stat.purple::after { background: rgba(155,92,255,.22); }
+    .stat small { position:relative; z-index:1; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; font-weight:900; font-size:11px; }
+    .stat b { position:relative; z-index:1; display:block; margin-top:8px; font-size:28px; letter-spacing:-.05em; }
+    .stat span { position:relative; z-index:1; display:block; margin-top:8px; color:var(--soft); font-size:12px; }
+    .tool-panel { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:16px; margin-bottom: 22px; }
+    .tool { padding:18px; border-radius:20px; border:1px solid var(--border); background: var(--panel); box-shadow: var(--shadow); }
+    .tool h4 { margin:0 0 8px; font-size:17px; }
+    .tool p { margin:0 0 14px; color:var(--soft); font-size:13px; line-height:1.5; }
+    .filters { display: grid; grid-template-columns: 1.2fr repeat(4, minmax(140px, .45fr)); gap: 12px; margin-bottom: 18px; padding: 16px; border-radius: 22px; border:1px solid var(--border); background: rgba(255,255,255,.035); }
+    .field { position: relative; }
+    .field label { display:block; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 7px; font-weight: 900; }
+    .field input, .field select { width:100%; padding: 12px 14px; border-radius: 14px; border:1px solid var(--border); background: rgba(0,0,0,.24); color:white; outline:none; }
+    .field input:focus, .field select:focus { border-color: rgba(87,242,135,.45); box-shadow: 0 0 0 3px rgba(87,242,135,.1); }
+    .panel { border-radius: var(--radius-lg); border:1px solid var(--border); background: var(--panel); box-shadow: var(--shadow); overflow:hidden; margin-bottom:22px; }
+    .panel-head { padding: 20px 22px; border-bottom: 1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:14px; }
+    .panel-head h3 { margin:0; font-size:20px; letter-spacing:-.03em; }
+    .panel-head span { color: var(--muted); font-size: 13px; }
+    .table-wrap { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; min-width:1350px; }
+    th { padding:14px 16px; text-align:left; color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.08em; border-bottom:1px solid var(--border); background:rgba(0,0,0,.12); position: sticky; top: 0; z-index: 2; }
+    td { padding:15px 16px; border-bottom:1px solid var(--border); color:var(--soft); vertical-align:middle; }
+    tr:hover td { color:white; background:rgba(255,255,255,.025); }
+    .user-card { display:flex; align-items:center; gap:12px; }
+    .mini-avatar { width:42px; height:42px; border-radius:15px; display:grid; place-items:center; font-weight:900; color:#06120b; background:linear-gradient(135deg,var(--green),var(--purple)); }
+    .uid { font-family:Consolas,monospace; color:white; font-size:13px; }
+    .sub { display:block; color:var(--muted); font-size:12px; margin-top:4px; }
+    .money { color:var(--green); font-weight:900; }
+    .bank { color:var(--blue); font-weight:900; }
+    .gold-text { color:var(--gold); font-weight:900; }
+    .red-text { color:var(--red); font-weight:900; }
+    .badge { display:inline-flex; align-items:center; justify-content:center; padding:7px 11px; border-radius:999px; font-size:12px; font-weight:900; text-transform:uppercase; border:1px solid transparent; }
+    .badge.active { background:rgba(87,242,135,.12); color:var(--green); border-color:rgba(87,242,135,.24); }
+    .badge.blacklisted { background:rgba(237,66,69,.12); color:var(--red); border-color:rgba(237,66,69,.24); }
+    .badge.warn { background:rgba(255,209,102,.12); color:var(--gold); border-color:rgba(255,209,102,.24); }
+    .control-grid { display:grid; grid-template-columns: 100px 100px auto; gap:8px; align-items:center; min-width:310px; }
+    .control-grid input { width:100%; padding:10px 11px; border-radius:12px; border:1px solid var(--border); background:rgba(0,0,0,.24); color:white; outline:none; }
+    .action-row { display:flex; flex-wrap:wrap; gap:8px; min-width:360px; }
+    .mini-form { display:inline-flex; margin:0; }
+    .drawer { display:none; background: rgba(255,255,255,.03); border-left: 3px solid rgba(87,242,135,.45); }
+    .drawer.open { display: table-row; }
+    .drawer-content { padding: 22px; }
+    .detail-grid { display:grid; grid-template-columns: repeat(4,1fr); gap:14px; }
+    .detail-card { padding:15px; border-radius:16px; border:1px solid var(--border); background:rgba(255,255,255,.035); }
+    .detail-card small { color:var(--muted); text-transform:uppercase; letter-spacing:.08em; font-size:10px; font-weight:900; }
+    .detail-card b { display:block; margin-top:7px; font-size:18px; }
+    .toast { position: fixed; right: 22px; bottom: 22px; padding: 14px 16px; border-radius: 16px; border:1px solid var(--border); background:rgba(12,16,24,.95); color:white; box-shadow:var(--shadow); display:none; z-index:50; }
+    .toast.show { display:block; animation: pop .25s ease; }
+    @keyframes pop { from { transform: translateY(10px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+    .bulk-bar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; padding:14px 16px; border-radius:20px; border:1px solid var(--border); background:rgba(255,255,255,.035); margin-bottom:18px; }
+    .bulk-bar span { color:var(--soft); font-size:13px; }
+    .checkbox { width:18px; height:18px; accent-color: var(--green); }
+    .empty { padding:50px; text-align:center; color:var(--muted); }
+    .footer { text-align:center; color:var(--muted); padding:20px; font-size:13px; }
+    @media (max-width: 1250px) { .app{grid-template-columns:1fr;} .sidebar{height:auto; position:relative; border-right:none; border-bottom:1px solid var(--border);} .stats-grid{grid-template-columns:repeat(2,1fr);} .tool-panel{grid-template-columns:1fr;} .filters{grid-template-columns:1fr 1fr;} .detail-grid{grid-template-columns:1fr 1fr;} }
+    @media (max-width: 760px) { .main{padding:18px;} .topbar{flex-direction:column; align-items:flex-start;} .stats-grid{grid-template-columns:1fr;} .filters{grid-template-columns:1fr;} .hero-grid{grid-template-columns:1fr;} .hero-badge{justify-self:start;} .detail-grid{grid-template-columns:1fr;} }
+    .u-gap-1 { gap: 1px; }
+    .u-gap-2 { gap: 2px; }
+    .u-gap-3 { gap: 3px; }
+    .u-gap-4 { gap: 4px; }
+    .u-gap-5 { gap: 5px; }
+    .u-gap-6 { gap: 6px; }
+    .u-gap-7 { gap: 7px; }
+    .u-gap-8 { gap: 8px; }
+    .u-gap-9 { gap: 9px; }
+    .u-gap-10 { gap: 10px; }
+    .u-gap-11 { gap: 11px; }
+    .u-gap-12 { gap: 12px; }
+    .u-gap-13 { gap: 13px; }
+    .u-gap-14 { gap: 14px; }
+    .u-gap-15 { gap: 15px; }
+    .u-gap-16 { gap: 16px; }
+    .u-gap-17 { gap: 17px; }
+    .u-gap-18 { gap: 18px; }
+    .u-gap-19 { gap: 19px; }
+    .u-gap-20 { gap: 20px; }
+    .u-gap-21 { gap: 21px; }
+    .u-gap-22 { gap: 22px; }
+    .u-gap-23 { gap: 23px; }
+    .u-gap-24 { gap: 0px; }
+    .u-gap-25 { gap: 1px; }
+    .u-gap-26 { gap: 2px; }
+    .u-gap-27 { gap: 3px; }
+    .u-gap-28 { gap: 4px; }
+    .u-gap-29 { gap: 5px; }
+    .u-gap-30 { gap: 6px; }
+    .u-gap-31 { gap: 7px; }
+    .u-gap-32 { gap: 8px; }
+    .u-gap-33 { gap: 9px; }
+    .u-gap-34 { gap: 10px; }
+    .u-gap-35 { gap: 11px; }
+    .u-gap-36 { gap: 12px; }
+    .u-gap-37 { gap: 13px; }
+    .u-gap-38 { gap: 14px; }
+    .u-gap-39 { gap: 15px; }
+    .u-gap-40 { gap: 16px; }
+    .u-gap-41 { gap: 17px; }
+    .u-gap-42 { gap: 18px; }
+    .u-gap-43 { gap: 19px; }
+    .u-gap-44 { gap: 20px; }
+    .u-gap-45 { gap: 21px; }
+    .u-gap-46 { gap: 22px; }
+    .u-gap-47 { gap: 23px; }
+    .u-gap-48 { gap: 0px; }
+    .u-gap-49 { gap: 1px; }
+    .u-gap-50 { gap: 2px; }
+    .u-gap-51 { gap: 3px; }
+    .u-gap-52 { gap: 4px; }
+    .u-gap-53 { gap: 5px; }
+    .u-gap-54 { gap: 6px; }
+    .u-gap-55 { gap: 7px; }
+    .u-gap-56 { gap: 8px; }
+    .u-gap-57 { gap: 9px; }
+    .u-gap-58 { gap: 10px; }
+    .u-gap-59 { gap: 11px; }
+    .u-gap-60 { gap: 12px; }
+    .u-gap-61 { gap: 13px; }
+    .u-gap-62 { gap: 14px; }
+    .u-gap-63 { gap: 15px; }
+    .u-gap-64 { gap: 16px; }
+    .u-gap-65 { gap: 17px; }
+    .u-gap-66 { gap: 18px; }
+    .u-gap-67 { gap: 19px; }
+    .u-gap-68 { gap: 20px; }
+    .u-gap-69 { gap: 21px; }
+    .u-gap-70 { gap: 22px; }
+    .u-gap-71 { gap: 23px; }
+    .u-gap-72 { gap: 0px; }
+    .u-gap-73 { gap: 1px; }
+    .u-gap-74 { gap: 2px; }
+    .u-gap-75 { gap: 3px; }
+    .u-gap-76 { gap: 4px; }
+    .u-gap-77 { gap: 5px; }
+    .u-gap-78 { gap: 6px; }
+    .u-gap-79 { gap: 7px; }
+    .u-gap-80 { gap: 8px; }
+    .u-gap-81 { gap: 9px; }
+    .u-gap-82 { gap: 10px; }
+    .u-gap-83 { gap: 11px; }
+    .u-gap-84 { gap: 12px; }
+    .u-gap-85 { gap: 13px; }
+    .u-gap-86 { gap: 14px; }
+    .u-gap-87 { gap: 15px; }
+    .u-gap-88 { gap: 16px; }
+    .u-gap-89 { gap: 17px; }
+    .u-gap-90 { gap: 18px; }
+    .u-gap-91 { gap: 19px; }
+    .u-gap-92 { gap: 20px; }
+    .u-gap-93 { gap: 21px; }
+    .u-gap-94 { gap: 22px; }
+    .u-gap-95 { gap: 23px; }
+    .u-gap-96 { gap: 0px; }
+    .u-gap-97 { gap: 1px; }
+    .u-gap-98 { gap: 2px; }
+    .u-gap-99 { gap: 3px; }
+    .u-gap-100 { gap: 4px; }
+    .u-gap-101 { gap: 5px; }
+    .u-gap-102 { gap: 6px; }
+    .u-gap-103 { gap: 7px; }
+    .u-gap-104 { gap: 8px; }
+    .u-gap-105 { gap: 9px; }
+    .u-gap-106 { gap: 10px; }
+    .u-gap-107 { gap: 11px; }
+    .u-gap-108 { gap: 12px; }
+    .u-gap-109 { gap: 13px; }
+    .u-gap-110 { gap: 14px; }
+    .u-gap-111 { gap: 15px; }
+    .u-gap-112 { gap: 16px; }
+    .u-gap-113 { gap: 17px; }
+    .u-gap-114 { gap: 18px; }
+    .u-gap-115 { gap: 19px; }
+    .u-gap-116 { gap: 20px; }
+    .u-gap-117 { gap: 21px; }
+    .u-gap-118 { gap: 22px; }
+    .u-gap-119 { gap: 23px; }
+    .u-gap-120 { gap: 0px; }
+    .u-gap-121 { gap: 1px; }
+    .u-gap-122 { gap: 2px; }
+    .u-gap-123 { gap: 3px; }
+    .u-gap-124 { gap: 4px; }
+    .u-gap-125 { gap: 5px; }
+    .u-gap-126 { gap: 6px; }
+    .u-gap-127 { gap: 7px; }
+    .u-gap-128 { gap: 8px; }
+    .u-gap-129 { gap: 9px; }
+    .u-gap-130 { gap: 10px; }
+    .u-gap-131 { gap: 11px; }
+    .u-gap-132 { gap: 12px; }
+    .u-gap-133 { gap: 13px; }
+    .u-gap-134 { gap: 14px; }
+    .u-gap-135 { gap: 15px; }
+    .u-gap-136 { gap: 16px; }
+    .u-gap-137 { gap: 17px; }
+    .u-gap-138 { gap: 18px; }
+    .u-gap-139 { gap: 19px; }
+    .u-gap-140 { gap: 20px; }
+    .u-gap-141 { gap: 21px; }
+    .u-gap-142 { gap: 22px; }
+    .u-gap-143 { gap: 23px; }
+    .u-gap-144 { gap: 0px; }
+    .u-gap-145 { gap: 1px; }
+    .u-gap-146 { gap: 2px; }
+    .u-gap-147 { gap: 3px; }
+    .u-gap-148 { gap: 4px; }
+    .u-gap-149 { gap: 5px; }
+    .u-gap-150 { gap: 6px; }
+    .u-gap-151 { gap: 7px; }
+    .u-gap-152 { gap: 8px; }
+    .u-gap-153 { gap: 9px; }
+    .u-gap-154 { gap: 10px; }
+    .u-gap-155 { gap: 11px; }
+    .u-gap-156 { gap: 12px; }
+    .u-gap-157 { gap: 13px; }
+    .u-gap-158 { gap: 14px; }
+    .u-gap-159 { gap: 15px; }
+    .u-gap-160 { gap: 16px; }
+    .u-gap-161 { gap: 17px; }
+    .u-gap-162 { gap: 18px; }
+    .u-gap-163 { gap: 19px; }
+    .u-gap-164 { gap: 20px; }
+    .u-gap-165 { gap: 21px; }
+    .u-gap-166 { gap: 22px; }
+    .u-gap-167 { gap: 23px; }
+    .u-gap-168 { gap: 0px; }
+    .u-gap-169 { gap: 1px; }
+    .u-gap-170 { gap: 2px; }
+    .u-gap-171 { gap: 3px; }
+    .u-gap-172 { gap: 4px; }
+    .u-gap-173 { gap: 5px; }
+    .u-gap-174 { gap: 6px; }
+    .u-gap-175 { gap: 7px; }
+    .u-gap-176 { gap: 8px; }
+    .u-gap-177 { gap: 9px; }
+    .u-gap-178 { gap: 10px; }
+    .u-gap-179 { gap: 11px; }
+    .u-gap-180 { gap: 12px; }
+    .u-gap-181 { gap: 13px; }
+    .u-gap-182 { gap: 14px; }
+    .u-gap-183 { gap: 15px; }
+    .u-gap-184 { gap: 16px; }
+    .u-gap-185 { gap: 17px; }
+    .u-gap-186 { gap: 18px; }
+    .u-gap-187 { gap: 19px; }
+    .u-gap-188 { gap: 20px; }
+    .u-gap-189 { gap: 21px; }
+    .u-gap-190 { gap: 22px; }
+    .u-gap-191 { gap: 23px; }
+    .u-gap-192 { gap: 0px; }
+    .u-gap-193 { gap: 1px; }
+    .u-gap-194 { gap: 2px; }
+    .u-gap-195 { gap: 3px; }
+    .u-gap-196 { gap: 4px; }
+    .u-gap-197 { gap: 5px; }
+    .u-gap-198 { gap: 6px; }
+    .u-gap-199 { gap: 7px; }
+    .u-gap-200 { gap: 8px; }
+    .u-gap-201 { gap: 9px; }
+    .u-gap-202 { gap: 10px; }
+    .u-gap-203 { gap: 11px; }
+    .u-gap-204 { gap: 12px; }
+    .u-gap-205 { gap: 13px; }
+    .u-gap-206 { gap: 14px; }
+    .u-gap-207 { gap: 15px; }
+    .u-gap-208 { gap: 16px; }
+    .u-gap-209 { gap: 17px; }
+    .u-gap-210 { gap: 18px; }
+    .u-gap-211 { gap: 19px; }
+    .u-gap-212 { gap: 20px; }
+    .u-gap-213 { gap: 21px; }
+    .u-gap-214 { gap: 22px; }
+    .u-gap-215 { gap: 23px; }
+    .u-gap-216 { gap: 0px; }
+    .u-gap-217 { gap: 1px; }
+    .u-gap-218 { gap: 2px; }
+    .u-gap-219 { gap: 3px; }
+    .u-gap-220 { gap: 4px; }
+    .u-gap-221 { gap: 5px; }
+    .u-gap-222 { gap: 6px; }
+    .u-gap-223 { gap: 7px; }
+    .u-gap-224 { gap: 8px; }
+    .u-gap-225 { gap: 9px; }
+    .u-gap-226 { gap: 10px; }
+    .u-gap-227 { gap: 11px; }
+    .u-gap-228 { gap: 12px; }
+    .u-gap-229 { gap: 13px; }
+    .u-gap-230 { gap: 14px; }
+    .u-gap-231 { gap: 15px; }
+    .u-gap-232 { gap: 16px; }
+    .u-gap-233 { gap: 17px; }
+    .u-gap-234 { gap: 18px; }
+    .u-gap-235 { gap: 19px; }
+    .u-gap-236 { gap: 20px; }
+    .u-gap-237 { gap: 21px; }
+    .u-gap-238 { gap: 22px; }
+    .u-gap-239 { gap: 23px; }
+    .u-gap-240 { gap: 0px; }
+    .u-gap-241 { gap: 1px; }
+    .u-gap-242 { gap: 2px; }
+    .u-gap-243 { gap: 3px; }
+    .u-gap-244 { gap: 4px; }
+    .u-gap-245 { gap: 5px; }
+    .u-gap-246 { gap: 6px; }
+    .u-gap-247 { gap: 7px; }
+    .u-gap-248 { gap: 8px; }
+    .u-gap-249 { gap: 9px; }
+    .u-gap-250 { gap: 10px; }
+    .u-gap-251 { gap: 11px; }
+    .u-gap-252 { gap: 12px; }
+    .u-gap-253 { gap: 13px; }
+    .u-gap-254 { gap: 14px; }
+    .u-gap-255 { gap: 15px; }
+    .u-gap-256 { gap: 16px; }
+    .u-gap-257 { gap: 17px; }
+    .u-gap-258 { gap: 18px; }
+    .u-gap-259 { gap: 19px; }
+    .u-gap-260 { gap: 20px; }
+    .u-gap-261 { gap: 21px; }
+    .u-gap-262 { gap: 22px; }
+    .u-gap-263 { gap: 23px; }
+    .u-gap-264 { gap: 0px; }
+    .u-gap-265 { gap: 1px; }
+    .u-gap-266 { gap: 2px; }
+    .u-gap-267 { gap: 3px; }
+    .u-gap-268 { gap: 4px; }
+    .u-gap-269 { gap: 5px; }
+    .u-gap-270 { gap: 6px; }
+    .u-gap-271 { gap: 7px; }
+    .u-gap-272 { gap: 8px; }
+    .u-gap-273 { gap: 9px; }
+    .u-gap-274 { gap: 10px; }
+    .u-gap-275 { gap: 11px; }
+    .u-gap-276 { gap: 12px; }
+    .u-gap-277 { gap: 13px; }
+    .u-gap-278 { gap: 14px; }
+    .u-gap-279 { gap: 15px; }
+    .u-gap-280 { gap: 16px; }
+    .u-gap-281 { gap: 17px; }
+    .u-gap-282 { gap: 18px; }
+    .u-gap-283 { gap: 19px; }
+    .u-gap-284 { gap: 20px; }
+    .u-gap-285 { gap: 21px; }
+    .u-gap-286 { gap: 22px; }
+    .u-gap-287 { gap: 23px; }
+    .u-gap-288 { gap: 0px; }
+    .u-gap-289 { gap: 1px; }
+    .u-gap-290 { gap: 2px; }
+    .u-gap-291 { gap: 3px; }
+    .u-gap-292 { gap: 4px; }
+    .u-gap-293 { gap: 5px; }
+    .u-gap-294 { gap: 6px; }
+    .u-gap-295 { gap: 7px; }
+    .u-gap-296 { gap: 8px; }
+    .u-gap-297 { gap: 9px; }
+    .u-gap-298 { gap: 10px; }
+    .u-gap-299 { gap: 11px; }
+    .u-gap-300 { gap: 12px; }
+    .u-pad-1 { padding: 1px; }
+    .u-pad-2 { padding: 2px; }
+    .u-pad-3 { padding: 3px; }
+    .u-pad-4 { padding: 4px; }
+    .u-pad-5 { padding: 5px; }
+    .u-pad-6 { padding: 6px; }
+    .u-pad-7 { padding: 7px; }
+    .u-pad-8 { padding: 8px; }
+    .u-pad-9 { padding: 9px; }
+    .u-pad-10 { padding: 10px; }
+    .u-pad-11 { padding: 11px; }
+    .u-pad-12 { padding: 12px; }
+    .u-pad-13 { padding: 13px; }
+    .u-pad-14 { padding: 14px; }
+    .u-pad-15 { padding: 15px; }
+    .u-pad-16 { padding: 16px; }
+    .u-pad-17 { padding: 17px; }
+    .u-pad-18 { padding: 18px; }
+    .u-pad-19 { padding: 19px; }
+    .u-pad-20 { padding: 20px; }
+    .u-pad-21 { padding: 21px; }
+    .u-pad-22 { padding: 22px; }
+    .u-pad-23 { padding: 23px; }
+    .u-pad-24 { padding: 24px; }
+    .u-pad-25 { padding: 25px; }
+    .u-pad-26 { padding: 26px; }
+    .u-pad-27 { padding: 27px; }
+    .u-pad-28 { padding: 28px; }
+    .u-pad-29 { padding: 29px; }
+    .u-pad-30 { padding: 30px; }
+    .u-pad-31 { padding: 31px; }
+    .u-pad-32 { padding: 0px; }
+    .u-pad-33 { padding: 1px; }
+    .u-pad-34 { padding: 2px; }
+    .u-pad-35 { padding: 3px; }
+    .u-pad-36 { padding: 4px; }
+    .u-pad-37 { padding: 5px; }
+    .u-pad-38 { padding: 6px; }
+    .u-pad-39 { padding: 7px; }
+    .u-pad-40 { padding: 8px; }
+    .u-pad-41 { padding: 9px; }
+    .u-pad-42 { padding: 10px; }
+    .u-pad-43 { padding: 11px; }
+    .u-pad-44 { padding: 12px; }
+    .u-pad-45 { padding: 13px; }
+    .u-pad-46 { padding: 14px; }
+    .u-pad-47 { padding: 15px; }
+    .u-pad-48 { padding: 16px; }
+    .u-pad-49 { padding: 17px; }
+    .u-pad-50 { padding: 18px; }
+    .u-pad-51 { padding: 19px; }
+    .u-pad-52 { padding: 20px; }
+    .u-pad-53 { padding: 21px; }
+    .u-pad-54 { padding: 22px; }
+    .u-pad-55 { padding: 23px; }
+    .u-pad-56 { padding: 24px; }
+    .u-pad-57 { padding: 25px; }
+    .u-pad-58 { padding: 26px; }
+    .u-pad-59 { padding: 27px; }
+    .u-pad-60 { padding: 28px; }
+    .u-pad-61 { padding: 29px; }
+    .u-pad-62 { padding: 30px; }
+    .u-pad-63 { padding: 31px; }
+    .u-pad-64 { padding: 0px; }
+    .u-pad-65 { padding: 1px; }
+    .u-pad-66 { padding: 2px; }
+    .u-pad-67 { padding: 3px; }
+    .u-pad-68 { padding: 4px; }
+    .u-pad-69 { padding: 5px; }
+    .u-pad-70 { padding: 6px; }
+    .u-pad-71 { padding: 7px; }
+    .u-pad-72 { padding: 8px; }
+    .u-pad-73 { padding: 9px; }
+    .u-pad-74 { padding: 10px; }
+    .u-pad-75 { padding: 11px; }
+    .u-pad-76 { padding: 12px; }
+    .u-pad-77 { padding: 13px; }
+    .u-pad-78 { padding: 14px; }
+    .u-pad-79 { padding: 15px; }
+    .u-pad-80 { padding: 16px; }
+    .u-pad-81 { padding: 17px; }
+    .u-pad-82 { padding: 18px; }
+    .u-pad-83 { padding: 19px; }
+    .u-pad-84 { padding: 20px; }
+    .u-pad-85 { padding: 21px; }
+    .u-pad-86 { padding: 22px; }
+    .u-pad-87 { padding: 23px; }
+    .u-pad-88 { padding: 24px; }
+    .u-pad-89 { padding: 25px; }
+    .u-pad-90 { padding: 26px; }
+    .u-pad-91 { padding: 27px; }
+    .u-pad-92 { padding: 28px; }
+    .u-pad-93 { padding: 29px; }
+    .u-pad-94 { padding: 30px; }
+    .u-pad-95 { padding: 31px; }
+    .u-pad-96 { padding: 0px; }
+    .u-pad-97 { padding: 1px; }
+    .u-pad-98 { padding: 2px; }
+    .u-pad-99 { padding: 3px; }
+    .u-pad-100 { padding: 4px; }
+    .u-pad-101 { padding: 5px; }
+    .u-pad-102 { padding: 6px; }
+    .u-pad-103 { padding: 7px; }
+    .u-pad-104 { padding: 8px; }
+    .u-pad-105 { padding: 9px; }
+    .u-pad-106 { padding: 10px; }
+    .u-pad-107 { padding: 11px; }
+    .u-pad-108 { padding: 12px; }
+    .u-pad-109 { padding: 13px; }
+    .u-pad-110 { padding: 14px; }
+    .u-pad-111 { padding: 15px; }
+    .u-pad-112 { padding: 16px; }
+    .u-pad-113 { padding: 17px; }
+    .u-pad-114 { padding: 18px; }
+    .u-pad-115 { padding: 19px; }
+    .u-pad-116 { padding: 20px; }
+    .u-pad-117 { padding: 21px; }
+    .u-pad-118 { padding: 22px; }
+    .u-pad-119 { padding: 23px; }
+    .u-pad-120 { padding: 24px; }
+    .u-pad-121 { padding: 25px; }
+    .u-pad-122 { padding: 26px; }
+    .u-pad-123 { padding: 27px; }
+    .u-pad-124 { padding: 28px; }
+    .u-pad-125 { padding: 29px; }
+    .u-pad-126 { padding: 30px; }
+    .u-pad-127 { padding: 31px; }
+    .u-pad-128 { padding: 0px; }
+    .u-pad-129 { padding: 1px; }
+    .u-pad-130 { padding: 2px; }
+    .u-pad-131 { padding: 3px; }
+    .u-pad-132 { padding: 4px; }
+    .u-pad-133 { padding: 5px; }
+    .u-pad-134 { padding: 6px; }
+    .u-pad-135 { padding: 7px; }
+    .u-pad-136 { padding: 8px; }
+    .u-pad-137 { padding: 9px; }
+    .u-pad-138 { padding: 10px; }
+    .u-pad-139 { padding: 11px; }
+    .u-pad-140 { padding: 12px; }
+    .u-pad-141 { padding: 13px; }
+    .u-pad-142 { padding: 14px; }
+    .u-pad-143 { padding: 15px; }
+    .u-pad-144 { padding: 16px; }
+    .u-pad-145 { padding: 17px; }
+    .u-pad-146 { padding: 18px; }
+    .u-pad-147 { padding: 19px; }
+    .u-pad-148 { padding: 20px; }
+    .u-pad-149 { padding: 21px; }
+    .u-pad-150 { padding: 22px; }
+    .u-radius-1 { border-radius: 1px; }
+    .u-radius-2 { border-radius: 2px; }
+    .u-radius-3 { border-radius: 3px; }
+    .u-radius-4 { border-radius: 4px; }
+    .u-radius-5 { border-radius: 5px; }
+    .u-radius-6 { border-radius: 6px; }
+    .u-radius-7 { border-radius: 7px; }
+    .u-radius-8 { border-radius: 8px; }
+    .u-radius-9 { border-radius: 9px; }
+    .u-radius-10 { border-radius: 10px; }
+    .u-radius-11 { border-radius: 11px; }
+    .u-radius-12 { border-radius: 12px; }
+    .u-radius-13 { border-radius: 13px; }
+    .u-radius-14 { border-radius: 14px; }
+    .u-radius-15 { border-radius: 15px; }
+    .u-radius-16 { border-radius: 16px; }
+    .u-radius-17 { border-radius: 17px; }
+    .u-radius-18 { border-radius: 18px; }
+    .u-radius-19 { border-radius: 19px; }
+    .u-radius-20 { border-radius: 20px; }
+    .u-radius-21 { border-radius: 21px; }
+    .u-radius-22 { border-radius: 22px; }
+    .u-radius-23 { border-radius: 23px; }
+    .u-radius-24 { border-radius: 24px; }
+    .u-radius-25 { border-radius: 25px; }
+    .u-radius-26 { border-radius: 26px; }
+    .u-radius-27 { border-radius: 27px; }
+    .u-radius-28 { border-radius: 28px; }
+    .u-radius-29 { border-radius: 29px; }
+    .u-radius-30 { border-radius: 0px; }
+    .u-radius-31 { border-radius: 1px; }
+    .u-radius-32 { border-radius: 2px; }
+    .u-radius-33 { border-radius: 3px; }
+    .u-radius-34 { border-radius: 4px; }
+    .u-radius-35 { border-radius: 5px; }
+    .u-radius-36 { border-radius: 6px; }
+    .u-radius-37 { border-radius: 7px; }
+    .u-radius-38 { border-radius: 8px; }
+    .u-radius-39 { border-radius: 9px; }
+    .u-radius-40 { border-radius: 10px; }
+    .u-radius-41 { border-radius: 11px; }
+    .u-radius-42 { border-radius: 12px; }
+    .u-radius-43 { border-radius: 13px; }
+    .u-radius-44 { border-radius: 14px; }
+    .u-radius-45 { border-radius: 15px; }
+    .u-radius-46 { border-radius: 16px; }
+    .u-radius-47 { border-radius: 17px; }
+    .u-radius-48 { border-radius: 18px; }
+    .u-radius-49 { border-radius: 19px; }
+    .u-radius-50 { border-radius: 20px; }
+    .u-radius-51 { border-radius: 21px; }
+    .u-radius-52 { border-radius: 22px; }
+    .u-radius-53 { border-radius: 23px; }
+    .u-radius-54 { border-radius: 24px; }
+    .u-radius-55 { border-radius: 25px; }
+    .u-radius-56 { border-radius: 26px; }
+    .u-radius-57 { border-radius: 27px; }
+    .u-radius-58 { border-radius: 28px; }
+    .u-radius-59 { border-radius: 29px; }
+    .u-radius-60 { border-radius: 0px; }
+    .u-radius-61 { border-radius: 1px; }
+    .u-radius-62 { border-radius: 2px; }
+    .u-radius-63 { border-radius: 3px; }
+    .u-radius-64 { border-radius: 4px; }
+    .u-radius-65 { border-radius: 5px; }
+    .u-radius-66 { border-radius: 6px; }
+    .u-radius-67 { border-radius: 7px; }
+    .u-radius-68 { border-radius: 8px; }
+    .u-radius-69 { border-radius: 9px; }
+    .u-radius-70 { border-radius: 10px; }
+    .u-radius-71 { border-radius: 11px; }
+    .u-radius-72 { border-radius: 12px; }
+    .u-radius-73 { border-radius: 13px; }
+    .u-radius-74 { border-radius: 14px; }
+    .u-radius-75 { border-radius: 15px; }
+    .u-radius-76 { border-radius: 16px; }
+    .u-radius-77 { border-radius: 17px; }
+    .u-radius-78 { border-radius: 18px; }
+    .u-radius-79 { border-radius: 19px; }
+    .u-radius-80 { border-radius: 20px; }
+    .u-radius-81 { border-radius: 21px; }
+    .u-radius-82 { border-radius: 22px; }
+    .u-radius-83 { border-radius: 23px; }
+    .u-radius-84 { border-radius: 24px; }
+    .u-radius-85 { border-radius: 25px; }
+    .u-radius-86 { border-radius: 26px; }
+    .u-radius-87 { border-radius: 27px; }
+    .u-radius-88 { border-radius: 28px; }
+    .u-radius-89 { border-radius: 29px; }
+    .u-radius-90 { border-radius: 0px; }
+    .u-radius-91 { border-radius: 1px; }
+    .u-radius-92 { border-radius: 2px; }
+    .u-radius-93 { border-radius: 3px; }
+    .u-radius-94 { border-radius: 4px; }
+    .u-radius-95 { border-radius: 5px; }
+    .u-radius-96 { border-radius: 6px; }
+    .u-radius-97 { border-radius: 7px; }
+    .u-radius-98 { border-radius: 8px; }
+    .u-radius-99 { border-radius: 9px; }
+    .u-radius-100 { border-radius: 10px; }
+    .u-opacity-1 { opacity: 0.10; }
+    .u-opacity-2 { opacity: 0.10; }
+    .u-opacity-3 { opacity: 0.10; }
+    .u-opacity-4 { opacity: 0.10; }
+    .u-opacity-5 { opacity: 0.10; }
+    .u-opacity-6 { opacity: 0.10; }
+    .u-opacity-7 { opacity: 0.10; }
+    .u-opacity-8 { opacity: 0.10; }
+    .u-opacity-9 { opacity: 0.10; }
+    .u-opacity-10 { opacity: 0.10; }
+    .u-opacity-11 { opacity: 0.11; }
+    .u-opacity-12 { opacity: 0.12; }
+    .u-opacity-13 { opacity: 0.13; }
+    .u-opacity-14 { opacity: 0.14; }
+    .u-opacity-15 { opacity: 0.15; }
+    .u-opacity-16 { opacity: 0.16; }
+    .u-opacity-17 { opacity: 0.17; }
+    .u-opacity-18 { opacity: 0.18; }
+    .u-opacity-19 { opacity: 0.19; }
+    .u-opacity-20 { opacity: 0.20; }
+    .u-opacity-21 { opacity: 0.21; }
+    .u-opacity-22 { opacity: 0.22; }
+    .u-opacity-23 { opacity: 0.23; }
+    .u-opacity-24 { opacity: 0.24; }
+    .u-opacity-25 { opacity: 0.25; }
+    .u-opacity-26 { opacity: 0.26; }
+    .u-opacity-27 { opacity: 0.27; }
+    .u-opacity-28 { opacity: 0.28; }
+    .u-opacity-29 { opacity: 0.29; }
+    .u-opacity-30 { opacity: 0.30; }
+    .u-opacity-31 { opacity: 0.31; }
+    .u-opacity-32 { opacity: 0.32; }
+    .u-opacity-33 { opacity: 0.33; }
+    .u-opacity-34 { opacity: 0.34; }
+    .u-opacity-35 { opacity: 0.35; }
+    .u-opacity-36 { opacity: 0.36; }
+    .u-opacity-37 { opacity: 0.37; }
+    .u-opacity-38 { opacity: 0.38; }
+    .u-opacity-39 { opacity: 0.39; }
+    .u-opacity-40 { opacity: 0.40; }
+    .u-opacity-41 { opacity: 0.41; }
+    .u-opacity-42 { opacity: 0.42; }
+    .u-opacity-43 { opacity: 0.43; }
+    .u-opacity-44 { opacity: 0.44; }
+    .u-opacity-45 { opacity: 0.45; }
+    .u-opacity-46 { opacity: 0.46; }
+    .u-opacity-47 { opacity: 0.47; }
+    .u-opacity-48 { opacity: 0.48; }
+    .u-opacity-49 { opacity: 0.49; }
+    .u-opacity-50 { opacity: 0.50; }
+    .u-opacity-51 { opacity: 0.51; }
+    .u-opacity-52 { opacity: 0.52; }
+    .u-opacity-53 { opacity: 0.53; }
+    .u-opacity-54 { opacity: 0.54; }
+    .u-opacity-55 { opacity: 0.55; }
+    .u-opacity-56 { opacity: 0.56; }
+    .u-opacity-57 { opacity: 0.57; }
+    .u-opacity-58 { opacity: 0.58; }
+    .u-opacity-59 { opacity: 0.59; }
+    .u-opacity-60 { opacity: 0.60; }
+    .u-opacity-61 { opacity: 0.61; }
+    .u-opacity-62 { opacity: 0.62; }
+    .u-opacity-63 { opacity: 0.63; }
+    .u-opacity-64 { opacity: 0.64; }
+    .u-opacity-65 { opacity: 0.65; }
+    .u-opacity-66 { opacity: 0.66; }
+    .u-opacity-67 { opacity: 0.67; }
+    .u-opacity-68 { opacity: 0.68; }
+    .u-opacity-69 { opacity: 0.69; }
+    .u-opacity-70 { opacity: 0.70; }
+    .u-opacity-71 { opacity: 0.71; }
+    .u-opacity-72 { opacity: 0.72; }
+    .u-opacity-73 { opacity: 0.73; }
+    .u-opacity-74 { opacity: 0.74; }
+    .u-opacity-75 { opacity: 0.75; }
+    .u-opacity-76 { opacity: 0.76; }
+    .u-opacity-77 { opacity: 0.77; }
+    .u-opacity-78 { opacity: 0.78; }
+    .u-opacity-79 { opacity: 0.79; }
+    .u-opacity-80 { opacity: 0.80; }
+    .u-opacity-81 { opacity: 0.81; }
+    .u-opacity-82 { opacity: 0.82; }
+    .u-opacity-83 { opacity: 0.83; }
+    .u-opacity-84 { opacity: 0.84; }
+    .u-opacity-85 { opacity: 0.85; }
+    .u-opacity-86 { opacity: 0.86; }
+    .u-opacity-87 { opacity: 0.87; }
+    .u-opacity-88 { opacity: 0.88; }
+    .u-opacity-89 { opacity: 0.89; }
+    .u-opacity-90 { opacity: 0.90; }
+    .u-opacity-91 { opacity: 0.91; }
+    .u-opacity-92 { opacity: 0.92; }
+    .u-opacity-93 { opacity: 0.93; }
+    .u-opacity-94 { opacity: 0.94; }
+    .u-opacity-95 { opacity: 0.95; }
+    .u-opacity-96 { opacity: 0.96; }
+    .u-opacity-97 { opacity: 0.97; }
+    .u-opacity-98 { opacity: 0.98; }
+    .u-opacity-99 { opacity: 0.99; }
+    .u-opacity-100 { opacity: 1.00; }
+  </style>
+</head>
+<body>
+  <%
+    const totalProfiles = users.length;
+    const totalWallet = users.reduce((a,u)=>a+(u.wallet||0),0);
+    const totalBank = users.reduce((a,u)=>a+(u.bank||0),0);
+    const totalMoney = totalWallet + totalBank;
+    const blacklistedCount = users.filter(u=>u.blacklisted).length;
+    const flaggedCount = users.filter(u=>(u.flags||0)>0).length;
+    const avgWallet = totalProfiles ? Math.floor(totalWallet / totalProfiles) : 0;
+    const avgBank = totalProfiles ? Math.floor(totalBank / totalProfiles) : 0;
+  %>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">🍀</div>
+        <div>
+          <h1>Clover</h1>
+          <p>User Command Center</p>
+        </div>
+      </div>
+      <div class="nav-label">Main</div>
+      <nav class="nav">
+        <a href="/">📊 Dashboard</a>
+        <a class="active" href="/users">👥 Users</a>
+        <a href="/orders">📦 Orders</a>
+        <a href="/servers">🖥️ Servers</a>
+        <a href="/bulk">🧰 Bulk Tools</a>
+        <a href="/logout">🚪 Logout</a>
+      </nav>
+      <div class="nav-label">Tools</div>
+      <div class="side-card">
+        <b>Live MongoDB Controls</b>
+        <span>Money edits, blacklist toggles, quick adjustments, and resets apply directly to your economy data.</span>
+      </div>
+      <div class="side-card">
+        <b>Safety Reminder</b>
+        <span>Use bulk actions carefully. This page is owner-only but it still edits real user profiles.</span>
+      </div>
+    </aside>
+    <main class="main">
+      <div class="topbar">
+        <div class="headline">
+          <h2>User Management</h2>
+          <p>Search, filter, edit, blacklist, and inspect economy profiles.</p>
+        </div>
+        <div class="top-actions">
+          <a class="btn" href="/">← Dashboard</a>
+          <button class="btn btn-blue" type="button" id="exportBtn">Export Visible</button>
+          <button class="btn btn-green" type="button" id="refreshBtn">Refresh</button>
+        </div>
+      </div>
+      <section class="hero">
+        <div class="hero-grid">
+          <div>
+            <h3>Economy Profiles Control Panel</h3>
+            <p>Manage wallet and bank balances, review exploit flags, apply blacklists, inspect profiles, and search your user economy data in real time.</p>
+            <div class="top-actions">
+              <button class="btn btn-green" type="button" data-scroll="profilesPanel">View Profiles</button>
+              <button class="btn btn-gold" type="button" data-scroll="bulkTools">Bulk Tools</button>
+              <button class="btn btn-red" type="button" id="showBlacklistedBtn">Show Blacklisted</button>
+            </div>
+          </div>
+          <div class="hero-badge">👥</div>
+        </div>
+      </section>
+      <section class="stats-grid">
+        <div class="stat"><small>Total Profiles</small><b><%= totalProfiles.toLocaleString() %></b><span>Users in this guild</span></div>
+        <div class="stat green"><small>Total Wallet</small><b><%= totalWallet.toLocaleString() %></b><span>Coins held in wallets</span></div>
+        <div class="stat"><small>Total Bank</small><b><%= totalBank.toLocaleString() %></b><span>Coins held in bank</span></div>
+        <div class="stat gold"><small>Flagged Users</small><b><%= flaggedCount.toLocaleString() %></b><span>Profiles with flags</span></div>
+        <div class="stat red"><small>Blacklisted</small><b><%= blacklistedCount.toLocaleString() %></b><span>Blocked users</span></div>
+      </section>
+      <section class="tool-panel" id="bulkTools">
+        <div class="tool"><h4>⚡ Quick Editing</h4><p>Change wallet and bank values inline, then hit save for that user.</p><button class="btn btn-green" type="button" data-scroll="profilesPanel">Open Table</button></div>
+        <div class="tool"><h4>🔍 Live Filtering</h4><p>Filter by user ID, status, flags, wealth range, and sorting preference.</p><button class="btn btn-blue" type="button" id="clearFiltersBtn">Clear Filters</button></div>
+        <div class="tool"><h4>📤 Export</h4><p>Copy visible table rows into a quick CSV-style text export for records.</p><button class="btn btn-gold" type="button" id="copyExportBtn">Copy Export</button></div>
+      </section>
+      <section class="filters">
+        <div class="field"><label>Search</label><input id="searchInput" placeholder="Search user ID, level, flags..." /></div>
+        <div class="field"><label>Status</label><select id="statusFilter"><option value="all">All</option><option value="active">Active</option><option value="blacklisted">Blacklisted</option><option value="flagged">Flagged</option></select></div>
+        <div class="field"><label>Sort</label><select id="sortFilter"><option value="total-desc">Total high → low</option><option value="wallet-desc">Wallet high → low</option><option value="bank-desc">Bank high → low</option><option value="flags-desc">Flags high → low</option><option value="level-desc">Level high → low</option><option value="total-asc">Total low → high</option></select></div>
+        <div class="field"><label>Minimum Total</label><input id="minMoney" placeholder="0" /></div>
+        <div class="field"><label>Maximum Total</label><input id="maxMoney" placeholder="none" /></div>
+      </section>
+      <div class="bulk-bar">
+        <span><b id="visibleCount"><%= users.length %></b> visible users • Total visible wealth updates as filters change.</span>
+        <div class="top-actions">
+          <button class="btn" type="button" id="selectVisibleBtn">Select Visible</button>
+          <button class="btn" type="button" id="clearSelectionBtn">Clear Selection</button>
+          <button class="btn btn-red" type="button" id="warnBulkBtn">Bulk tools soon</button>
+        </div>
+      </div>
+      <section class="panel" id="profilesPanel">
+        <div class="panel-head">
+          <h3>👥 Economy Profiles</h3>
+          <span><span id="selectedCount">0</span> selected</span>
+        </div>
+        <div class="table-wrap">
+          <table id="usersTable">
+            <thead>
+              <tr>
+                <th>Select</th>
+                <th>User</th>
+                <th>Wallet</th>
+                <th>Bank</th>
+                <th>Total</th>
+                <th>Level</th>
+                <th>XP</th>
+                <th>Streak</th>
+                <th>Flags</th>
+                <th>Status</th>
+                <th>Money Controls</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (!users.length) { %>
+                <tr><td colspan="12" class="empty">No users found.</td></tr>
+              <% } %>
+              <% users.forEach((u, idx) => {
+                   const wallet = u.wallet || 0;
+                   const bank = u.bank || 0;
+                   const total = wallet + bank;
+                   const flags = u.flags || 0;
+                   const level = u.level || 1;
+                   const xp = u.xp || 0;
+                   const streak = u.streak || 0;
+              %>
+                <tr class="user-row"
+                    data-user="<%= u.userId %>"
+                    data-wallet="<%= wallet %>"
+                    data-bank="<%= bank %>"
+                    data-total="<%= total %>"
+                    data-flags="<%= flags %>"
+                    data-level="<%= level %>"
+                    data-status="<%= u.blacklisted ? 'blacklisted' : 'active' %>">
+                  <td><input class="checkbox row-check" type="checkbox" /></td>
+                  <td>
+                    <div class="user-card">
+                      <div class="mini-avatar"><%= String(u.username || u.userId).slice(0, 2).toUpperCase() %></div>
+                      <div>
+                        <span class="uid"><%= u.username || u.userId %></span>
+                        <span class="sub">Profile #<%= idx + 1 %></span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="money"><%= wallet.toLocaleString() %></td>
+                  <td class="bank"><%= bank.toLocaleString() %></td>
+                  <td class="money"><%= total.toLocaleString() %></td>
+                  <td><%= level %></td>
+                  <td><%= xp.toLocaleString() %></td>
+                  <td><%= streak %></td>
+                  <td class="<%= flags > 0 ? 'gold-text' : '' %>"><%= flags %></td>
+                  <td>
+                    <% if (u.blacklisted) { %>
+                      <span class="badge blacklisted">Blacklisted</span>
+                    <% } else if (flags > 0) { %>
+                      <span class="badge warn">Flagged</span>
+                    <% } else { %>
+                      <span class="badge active">Active</span>
+                    <% } %>
+                  </td>
+                  <td>
+                    <form class="control-grid" method="POST" action="/users/<%= u.userId %>/money">
+                      <input name="wallet" value="<%= wallet %>" />
+                      <input name="bank" value="<%= bank %>" />
+                      <button class="btn btn-green" type="submit">Save</button>
+                    </form>
+                  </td>
+                  <td>
+                    <div class="action-row">
+                      <form class="mini-form" method="POST" action="/users/<%= u.userId %>/money"><input type="hidden" name="wallet" value="<%= wallet + 1000 %>" /><input type="hidden" name="bank" value="<%= bank %>" /><button class="btn btn-blue" type="submit">+1k</button></form>
+                      <form class="mini-form" method="POST" action="/users/<%= u.userId %>/money"><input type="hidden" name="wallet" value="<%= Math.max(0, wallet - 1000) %>" /><input type="hidden" name="bank" value="<%= bank %>" /><button class="btn btn-red" type="submit">-1k</button></form>
+                      <form class="mini-form" method="POST" action="/users/<%= u.userId %>/blacklist"><button class="btn <%= u.blacklisted ? 'btn-green' : 'btn-red' %>" type="submit"><%= u.blacklisted ? 'Unblacklist' : 'Blacklist' %></button></form>
+                      <button class="btn" type="button" data-drawer="drawer-<%= u.userId %>">Details</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="drawer" id="drawer-<%= u.userId %>">
+                  <td colspan="12">
+                    <div class="drawer-content">
+                      <div class="detail-grid">
+                        <div class="detail-card"><small>Username</small><b><%= u.username || u.userId %></b></div>
+                        <div class="detail-card"><small>Wallet</small><b><%= wallet.toLocaleString() %></b></div>
+                        <div class="detail-card"><small>Bank</small><b><%= bank.toLocaleString() %></b></div>
+                        <div class="detail-card"><small>Total</small><b><%= total.toLocaleString() %></b></div>
+                        <div class="detail-card"><small>Level</small><b><%= level %></b></div>
+                        <div class="detail-card"><small>XP</small><b><%= xp.toLocaleString() %></b></div>
+                        <div class="detail-card"><small>Daily Streak</small><b><%= streak %></b></div>
+                        <div class="detail-card"><small>Flags</small><b><%= flags %></b></div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <div class="footer">Clover Users Dashboard • Direct MongoDB economy management</div>
+    </main>
+  </div>
+  <div class="toast" id="toast">Copied export to clipboard.</div>
+  <script>
+    const rows = [...document.querySelectorAll('.user-row')];
+    const searchInput = document.getElementById('searchInput');
+    const statusFilter = document.getElementById('statusFilter');
+    const sortFilter = document.getElementById('sortFilter');
+    const minMoney = document.getElementById('minMoney');
+    const maxMoney = document.getElementById('maxMoney');
+    const visibleCount = document.getElementById('visibleCount');
+    const selectedCount = document.getElementById('selectedCount');
+    const toast = document.getElementById('toast');
+    function moneyNumber(value) { const n = Number(String(value || '').replace(/,/g, '').trim()); return Number.isFinite(n) ? n : 0; }
+    function rowPair(row) { const drawer = row.nextElementSibling?.classList?.contains('drawer') ? row.nextElementSibling : null; return drawer; }
+    function setRowVisible(row, visible) { row.style.display = visible ? '' : 'none'; const drawer = rowPair(row); if (drawer && !visible) drawer.classList.remove('open'); if (drawer) drawer.style.display = visible && drawer.classList.contains('open') ? 'table-row' : 'none'; }
+    function applyFilters() {
+      const query = searchInput.value.toLowerCase().trim();
+      const status = statusFilter.value;
+      const min = moneyNumber(minMoney.value);
+      const maxRaw = maxMoney.value.trim();
+      const max = maxRaw ? moneyNumber(maxRaw) : Infinity;
+      let count = 0;
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        const rowStatus = row.dataset.status;
+        const total = Number(row.dataset.total || 0);
+        const flags = Number(row.dataset.flags || 0);
+        const matchesSearch = text.includes(query);
+        const matchesStatus = status === 'all' || rowStatus === status || (status === 'flagged' && flags > 0);
+        const matchesMoney = total >= min && total <= max;
+        const visible = matchesSearch && matchesStatus && matchesMoney;
+        setRowVisible(row, visible);
+        if (visible) count++;
+      });
+      visibleCount.textContent = count;
+      updateSelectedCount();
+    }
+    function applySort() {
+      const [field, dir] = sortFilter.value.split('-');
+      const tbody = document.querySelector('#usersTable tbody');
+      const pairs = rows.map(row => ({ row, drawer: rowPair(row) }));
+      pairs.sort((a,b) => {
+        const av = Number(a.row.dataset[field] || 0);
+        const bv = Number(b.row.dataset[field] || 0);
+        return dir === 'asc' ? av - bv : bv - av;
+      });
+      pairs.forEach(pair => { tbody.appendChild(pair.row); if (pair.drawer) tbody.appendChild(pair.drawer); });
+    }
+    function updateSelectedCount() { selectedCount.textContent = document.querySelectorAll('.row-check:checked').length; }
+    searchInput.addEventListener('input', applyFilters);
+    statusFilter.addEventListener('change', applyFilters);
+    minMoney.addEventListener('input', applyFilters);
+    maxMoney.addEventListener('input', applyFilters);
+    sortFilter.addEventListener('change', () => { applySort(); applyFilters(); });
+    document.querySelectorAll('[data-drawer]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const drawer = document.getElementById(btn.dataset.drawer);
+        drawer.classList.toggle('open');
+        drawer.style.display = drawer.classList.contains('open') ? 'table-row' : 'none';
+      });
+    });
+    document.querySelectorAll('.row-check').forEach(box => box.addEventListener('change', updateSelectedCount));
+    document.getElementById('selectVisibleBtn').addEventListener('click', () => { rows.forEach(row => { if (row.style.display !== 'none') row.querySelector('.row-check').checked = true; }); updateSelectedCount(); });
+    document.getElementById('clearSelectionBtn').addEventListener('click', () => { document.querySelectorAll('.row-check').forEach(b => b.checked = false); updateSelectedCount(); });
+    document.getElementById('clearFiltersBtn').addEventListener('click', () => { searchInput.value=''; statusFilter.value='all'; sortFilter.value='total-desc'; minMoney.value=''; maxMoney.value=''; applySort(); applyFilters(); });
+    document.getElementById('showBlacklistedBtn').addEventListener('click', () => { statusFilter.value='blacklisted'; applyFilters(); });
+    document.getElementById('refreshBtn').addEventListener('click', () => window.location.reload());
+    document.querySelectorAll('[data-scroll]').forEach(btn => { btn.addEventListener('click', () => document.getElementById(btn.dataset.scroll)?.scrollIntoView({ behavior:'smooth' })); });
+    function visibleExport() {
+      const lines = ['userId,wallet,bank,total,level,xp,flags,status'];
+      rows.forEach(row => {
+        if (row.style.display === 'none') return;
+        lines.push([row.dataset.user,row.dataset.wallet,row.dataset.bank,row.dataset.total,row.dataset.level,row.querySelectorAll('td')[6]?.innerText.trim(),row.dataset.flags,row.dataset.status].join(','));
+      });
+      return lines.join('\n');
+    }
+    function showToast(text) { toast.textContent = text; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'), 1800); }
+    document.getElementById('copyExportBtn').addEventListener('click', async () => { await navigator.clipboard.writeText(visibleExport()); showToast('Copied visible users export.'); });
+    document.getElementById('exportBtn').addEventListener('click', () => { const blob = new Blob([visibleExport()], {type:'text/csv'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download='clover-users.csv'; a.click(); URL.revokeObjectURL(url); });
+    document.getElementById('warnBulkBtn').addEventListener('click', () => showToast('Bulk destructive actions are intentionally disabled for safety.'));
+    applySort();
+    applyFilters();
+  </script>
+</body>
+</html>

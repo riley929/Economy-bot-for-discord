@@ -1,0 +1,41 @@
+[
+  {
+    "id": "032",
+    "name": "Lucky Charm",
+    "description": "A collectible charm. Future use item.",
+    "type": "collectible",
+    "price": 10000,
+    "stock": -1
+  },
+  {
+    "id": "184",
+    "name": "Work Multiplier",
+    "description": "Use this to get 2x work rewards for 1 hour.",
+    "type": "consumable",
+    "price": 25000,
+    "effect": "work_multiplier",
+    "multiplier": 2,
+    "durationMinutes": 60,
+    "stock": -1
+  },
+  {
+    "id": "429",
+    "name": "Gambling Multiplier",
+    "description": "Use this to get 1.25x gambling payouts for 30 minutes.",
+    "type": "consumable",
+    "price": 75000,
+    "effect": "gambling_multiplier",
+    "multiplier": 1.25,
+    "durationMinutes": 30,
+    "stock": -1
+  },
+  {
+    "id": "706",
+    "name": "Mystery Box",
+    "description": "Use this for a random coin reward.",
+    "type": "consumable",
+    "price": 15000,
+    "effect": "mystery_box",
+    "stock": -1
+  }
+]
